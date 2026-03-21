@@ -1,0 +1,47 @@
+import mongoose from "mongoose";
+import { createLike, deleteLikeById, getByUserId } from "../services/likes.service.js";
+
+function isValidObjectId(id) {
+  return mongoose.Types.ObjectId.isValid(id);
+}
+
+export async function create(req, res, next) {
+  console.log(req.body)
+  try {
+    const article = await createLike(req.body);
+    return res.status(201).json({ data: article });
+  } catch (error) {
+    return next(error);
+  }
+}
+
+export async function remove(req, res, next) {
+  try {
+    const { id } = req.params;
+    if (!isValidObjectId(id)) {
+      return res.status(400).json({ error: { message: "Invalid id" } });
+    }
+
+    const deleted = await deleteLikeById(id);
+    if (!deleted)
+      return res.status(404).json({ error: { message: "Article not found" } });
+    return res.status(204).json({ message: "ok" });
+  } catch (err) {
+    return next(err);
+  }
+}
+
+
+export async function getOne(req, res, next){
+   try {
+    const  userId  = req.query.userId;
+    const  quoteId  = req.query.quoteId;
+    if (!isValidObjectId(userId) || !isValidObjectId(quoteId)) {
+      return res.status(400).json({ error: { message: "Invalid id" } });
+    }
+    const like = await getByUserId(userId, quoteId);
+    return res.status(200).json(like);
+  } catch (err) {
+    return next(err);
+  }
+}

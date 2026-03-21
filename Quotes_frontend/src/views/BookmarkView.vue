@@ -1,0 +1,150 @@
+<template>
+  <div class="bg-gray-100 min-h-screen py-12">
+    <div class="mx-auto max-w-3xl sm:px-6 lg:px-8 space-y-6">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6 px-4 sm:px-0">Mes Favoris</h2>
+
+      <!-- État de chargement -->
+      <div v-if="!quotes" class="text-center py-10">
+        <p class="text-gray-500 animate-pulse">Chargement de vos favoris...</p>
+      </div>
+
+      <!-- Liste des citations mises en favoris -->
+      <template v-else-if="quotes.length > 0">
+        <div
+          v-for="quote in quotes"
+          :key="quote._id"
+          class="bg-white shadow sm:rounded-lg overflow-hidden border border-gray-200"
+        >
+          <div class="px-4 py-5 sm:p-6">
+            <!-- Header : Identique à l'accueil -->
+            <div class="flex items-center gap-3 mb-4">
+              <div
+                class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-indigo-600 text-white font-bold uppercase text-sm"
+              >
+                {{ quote.author?.username?.substring(0, 2) }}
+              </div>
+              <div>
+                <h3 class="text-lg font-medium leading-6 text-gray-900">
+                  {{ quote.author?.username }}
+                </h3>
+                <p class="text-xs text-indigo-500 font-medium">Favori enregistré</p>
+              </div>
+            </div>
+
+            <!-- Contenu -->
+            <div class="mt-2 text-sm text-gray-700 italic">
+              <p class="text-lg">" {{ quote.text }} "</p>
+            </div>
+
+            <!-- Actions rapides -->
+            <div class="mt-6 flex items-center justify-between border-t border-gray-100 pt-4">
+              <button
+                @click="router.push({ name: 'comment-quote', params: { id: quote._id } })"
+                class="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+              >
+                Voir la discussion →
+              </button>
+
+              <!-- Optionnel: Bouton pour retirer le favori ici aussi -->
+              <button
+                @click="removeBookmark(quote._id)"
+                class="text-gray-400 hover:text-red-500 transition-colors"
+              >
+                <svg
+                  xmlns="http://www.w3.org"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  class="w-5 h-5 text-yellow-500"
+                >
+                  <path
+                    d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <!-- État Vide -->
+      <div
+        v-else
+        class="bg-white shadow sm:rounded-lg p-12 text-center border-2 border-dashed border-gray-300"
+      >
+        <svg
+          xmlns="http://www.w3.org"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1"
+          stroke="currentColor"
+          class="mx-auto h-12 w-12 text-gray-400"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z"
+          />
+        </svg>
+        <h3 class="mt-2 text-sm font-semibold text-gray-900">Aucun favori</h3>
+        <p class="mt-1 text-sm text-gray-500">
+          Commencez par explorer des citations pour les enregistrer ici.
+        </p>
+        <div class="mt-6">
+          <button
+            @click="router.push('/')"
+            class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+          >
+            Explorer les citations
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Bouton flottant -->
+  <button
+    @click="router.push({ name: 'add-quote' })"
+    class="cursor-pointer fixed bottom-8 right-8 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-600 text-white shadow-xl hover:bg-indigo-700 transition-all hover:scale-110 active:scale-95 z-50"
+  >
+    <svg
+      xmlns="http://www.w3.org"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="2.5"
+      stroke="currentColor"
+      class="w-8 h-8"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+    </svg>
+  </button>
+</template>
+
+<script setup>
+import { onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+
+const route = useRoute()
+const router = useRouter()
+const quoteId = route.params.id // Ici l'ID de l'USER passé dans l'URL
+const quotes = ref(null)
+
+async function getBookmark() {
+  try {
+    const response = await fetch(`http://localhost:4000/api/quotes/bookMark/${quoteId}`)
+    if (!response.ok) throw new Error('Erreur réseau')
+    const result = await response.json()
+    // On s'attend à recevoir un tableau d'objets Quote
+    quotes.value = result.data || result
+  } catch (error) {
+    console.error('Problème au cours du chargement :', error)
+    quotes.value = []
+  }
+}
+
+async function removeBookmark(id) {
+  // Optionnel : ajouter ici la logique pour supprimer le favori et rafraîchir
+  // await fetch(...)
+  // getBookmark()
+}
+
+onMounted(getBookmark)
+</script>
