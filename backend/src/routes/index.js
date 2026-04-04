@@ -1,0 +1,19 @@
+import { Router } from "express";
+import authRouter from "./auth.routes.js";
+import quoteRouter from "./quote.routes.js";
+import commentRouter from "./comment.routes.js";
+import likeRouter from "./like.routes.js";
+import bookmarkRouter from "./bookmark.routes.js";
+import upload from '../middlewares/multerConfig.js';
+import chatRouter from "./chat.routes.js";
+import codeRouter from "./code.routes.js";
+const router = Router();
+router.use("/auth", upload.single('avatar'), authRouter);
+router.use("/quotes", upload.single('image'), quoteRouter);
+router.use("/comments", commentRouter);
+router.use("/likes", likeRouter);
+router.use("/bookmarks", bookmarkRouter);
+router.use("/chat", chatRouter);
+router.use("/code", codeRouter);
+
+export default router;
