@@ -64,6 +64,12 @@ export async function listQuotes({ page = 1, limit = 10, search, tags }) {
     filter.tags = { $regex: tags, $options: "i" };
   }
 
+  // if (tgs){
+  //   filter.tags = {
+  //     $in : tags;
+  //   }
+  // }
+
   // console.log(await Quote.find({}))
   // console.log(filter)
 

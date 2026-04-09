@@ -8,6 +8,7 @@ import MyQuotesView from '@/views/MyQuotesView.vue'
 import ProfilView from '@/views/ProfilView.vue'
 import QuoteDetailsView from '@/views/QuoteDetailsView.vue'
 import RegisterView from '@/views/RegisterView.vue'
+import SearchView from '@/views/SearchView.vue'
 import SettingView from '@/views/SettingView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -44,6 +45,14 @@ const routes = [
     },
   },
   {
+    path: '/search',
+    name: 'search',
+    component: SearchView,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
     path: '/addquote',
     name: 'add-quote',
     component: CreateQuoteView,
@@ -63,9 +72,9 @@ const routes = [
     path: '/comment/:id',
     name: 'comment-quote',
     component: CommentView,
-    // meta: {
-    //   requiresAuth: true,
-    // },
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: '/bookmarks/:id',
@@ -98,17 +107,6 @@ const router = createRouter({
   routes: routes,
 })
 
-// router.beforeEach((to, from, next) => {
-//   const loginStore = useLoginStore()
-//   const logged = loginStore.token
-//   if (!logged) {
-//     next({ name: 'login' })
-//   } else if (to.name === 'login' && logged) {
-//     next({ name: 'home' })
-//   } else {
-//     next()
-//   }
-// })
 
 // ✅ NOUVELLE MÉTHODE (Recommandée)
 router.beforeEach((to, from) => {
