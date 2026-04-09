@@ -48,6 +48,7 @@ const filteredQuotes = computed(() => {
 
 async function getQuotes() {
   try {
+    if (!search.value && !tags.value) return;
     const response = await fetch(
       `http://localhost:4000/api/quotes?page=${page.value}&limit=${limit.value}&search=${search.value}&tags=${tags.value}`,
     )
@@ -73,12 +74,11 @@ onMounted(getQuotes)
 <template>
   <div class="bg-gray-100 min-h-screen py-12">
     <div class="mx-auto max-w-3xl sm:px-6 lg:px-8 space-y-6">
-      <h2>Découvrez les meilleurs citations avec citApp</h2>
-      <div>Plus de {{ filteredQuotes.length }} citations</div>
       <!-- 🔍 Barre de recherche + filtres -->
-      <!-- <div
+      <div
         class="bg-white shadow sm:rounded-lg p-4 flex flex-col md:flex-row gap-4 md:items-center md:justify-between"
       >
+        <!-- Input recherche -->
         <div class="flex-1">
           <input
             v-model="search"
@@ -88,6 +88,7 @@ onMounted(getQuotes)
           />
         </div>
 
+        <!-- Boutons filtres -->
         <div class="flex items-center gap-2">
           <select
             v-model="tags"
@@ -109,28 +110,15 @@ onMounted(getQuotes)
             Populaire
           </button>
         </div>
-      </div> -->
-      <div v-for="quote in filteredQuotes" :key="quote._id" class="bg-white shadow sm:rounded-lg">
+      </div>
+      <!-- 2. La boucle v-for uniquement sur la carte -->
+      <div v-if="quote.length > 0" v-for="quote in filteredQuotes" :key="quote._id" class="bg-white shadow sm:rounded-lg">
         <Quote :quote="quote" @userAction="getQuotes()" />
+      </div> 
+      <div v-else >
+        Aucune citation ne correspond à votre recherche. 
       </div>
     </div>
-
-    <!-- Bouton flottant -->
-    <button
-      @click="router.push({ name: 'add-quote' })"
-      class="cursor-pointer fixed bottom-8 right-8 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-600 text-white shadow-xl hover:bg-indigo-700 transition-all hover:scale-110 active:scale-95 z-50"
-    >
-      <svg
-        xmlns="http://www.w3.org"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="2.5"
-        stroke="currentColor"
-        class="w-8 h-8"
-      >
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-      </svg>
-    </button>
   </div>
 </template>
 
