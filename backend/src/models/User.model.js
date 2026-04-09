@@ -14,7 +14,8 @@ const userSchema = new Schema(
     role: { type: String, enum: ["admin", "user"], default: "user" },
     bio: {type: String, minlength: 7},
     gender: {type: String, enum: ["M", "F"], required: true},
-    avatar: { type: String, default: "" }
+    avatar: { type: String, default: "" },
+    status: { type: String, enum: ["unactive", "active"], default: "active" },
   },
   { timestamps: true },
 );

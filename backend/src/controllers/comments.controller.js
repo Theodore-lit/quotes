@@ -13,7 +13,6 @@ function isValidObjectId(id) {
 
 export async function list(req, res, next) {
   try {
-    console.log(req.query);
     const comments = await listComments({page: req.query.page, limit:req.query.limit, quoteId: req.query.quoteId});
     return res.status(200).json(comments);
   } catch (error) {
@@ -23,7 +22,6 @@ export async function list(req, res, next) {
 
 export async function create(req, res, next) {
   try {
-    console.log((req.body));
     const article = await createComment(req.body);
     return res.status(201).json({ data: article });
   } catch (error) {

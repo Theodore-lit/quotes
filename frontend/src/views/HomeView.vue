@@ -46,21 +46,6 @@ const filteredQuotes = computed(() => {
   return result
 })
 
-// Vérifie si l'ID de l'utilisateur actuel est dans le tableau likesCount
-// const isLiked = (quote) => {
-//   return quote.likesCount.some((like) => {
-//     const userIdInLike = like.user
-//     return userIdInLike === decoded.value?.sub
-//   })
-// }
-
-// const isMarked = (quote) => {
-//   return quote.bookmarksCount.some((mark) => {
-//     const userIdInMark = mark.user
-//     return userIdInMark === decoded.value?.sub
-//   })
-// }
-
 async function getQuotes() {
   try {
     const response = await fetch(
@@ -74,65 +59,6 @@ async function getQuotes() {
     console.error('Problème au cours du chargement :', error)
   }
 }
-
-// async function liked(quoteId, userId) {
-//   try {
-//     const res = await fetch(`http://localhost:4000/api/likes?userId=${userId}&quoteId=${quoteId}`)
-//     const existingLikes = await res.json()
-//     // Si le like existe déjà (tableau non vide), on le supprime (Unlike)
-//     if (existingLikes.length > 0) {
-//       const likeId = existingLikes[0]._id
-//       await fetch(`http://localhost:4000/api/likes/${likeId}`, {
-//         method: 'DELETE',
-//       })
-//     } else {
-//       const response = await fetch('http://localhost:4000/api/likes', {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({
-//           user: userId,
-//           quote: quoteId,
-//         }),
-//       })
-//     }
-//     getQuotes()
-//   } catch (error) {
-//     console.error('Problème au cours du chargement :', error)
-//   }
-// }
-
-// async function bookmarked(quoteId, userId) {
-//   try {
-//     const res = await fetch(
-//       `http://localhost:4000/api/bookmarks?userId=${userId}&quoteId=${quoteId}`,
-//     )
-
-//     const existingBookmarks = await res.json()
-//     // Si le mark existe déjà (tableau non vide), on le supprime (Unmark)
-//     if (existingBookmarks?.length > 0) {
-//       const markId = existingBookmarks[0]._id
-//       await fetch(`http://localhost:4000/api/bookmarks/${markId}`, {
-//         method: 'DELETE',
-//       })
-//     } else {
-//       const response = await fetch('http://localhost:4000/api/bookmarks', {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({
-//           user: userId,
-//           quote: quoteId,
-//         }),
-//       })
-//     }
-//     getQuotes()
-//   } catch (error) {
-//     console.error('Problème au cours du chargement :', error)
-//   }
-// }
 
 watch(
   () => [search.value, limit.value, tags.value],

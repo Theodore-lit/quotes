@@ -23,16 +23,6 @@ export async function listComments({ page = 1, limit = 5, quoteId}) {
   const safePage = Math.max(Number(page) || 1, 1);
   const safeLimit = Math.min(Math.max(Number(limit) || 5, 1), 50);
 
-  
-//   if (search) {
-    // recherche simple sur title (regex)
-    // filter.text = { $regex: search, $options: "i" };
-//   }
-
-//   if (tags){
-    // filter.tags = { $regex: tags, $options: "i"}
-//   }
-
   const items = await Promise.all([
     Comment.find({quote: quoteId})
       .sort({ creatAt: -1 })

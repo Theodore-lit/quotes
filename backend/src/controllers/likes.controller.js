@@ -44,3 +44,16 @@ export async function getOne(req, res, next){
     return next(err);
   }
 }
+export async function commentLike(req, res, next){
+   try {
+    const  userId  = req.query.userId;
+    const  commentId  = req.query.commentId;
+    if (!isValidObjectId(userId) || !isValidObjectId(quoteId)) {
+      return res.status(400).json({ error: { message: "Invalid id" } });
+    }
+    const like = await commentLikeByUser(userId, commentId);
+    return res.status(200).json(like);
+  } catch (err) {
+    return next(err);
+  }
+}

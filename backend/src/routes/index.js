@@ -1,5 +1,6 @@
 import { Router } from "express";
 import authRouter from "./auth.routes.js";
+import userRouter from "./user.routes.js";
 import quoteRouter from "./quote.routes.js";
 import commentRouter from "./comment.routes.js";
 import likeRouter from "./like.routes.js";
@@ -9,6 +10,7 @@ import chatRouter from "./chat.routes.js";
 import codeRouter from "./code.routes.js";
 const router = Router();
 router.use("/auth", upload.single('avatar'), authRouter);
+router.use("/user", upload.single('avatar'), userRouter);
 router.use("/quotes", upload.single('image'), quoteRouter);
 router.use("/comments", commentRouter);
 router.use("/likes", likeRouter);

@@ -63,9 +63,9 @@ const routes = [
     path: '/comment/:id',
     name: 'comment-quote',
     component: CommentView,
-    meta: {
-      requiresAuth: true,
-    },
+    // meta: {
+    //   requiresAuth: true,
+    // },
   },
   {
     path: '/bookmarks/:id',

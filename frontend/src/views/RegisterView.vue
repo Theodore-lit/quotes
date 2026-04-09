@@ -7,6 +7,7 @@ const confirmPass = ref('')
 // const avatar = ref(null);
 const badPass = ref(null)
 const badEmail = ref(null)
+const curImage = ref(null)
 
 const newUser = reactive({
   username: '',
@@ -60,8 +61,8 @@ async function register() {
   }
 }
 const handleFileUpload = (event) => {
-  newUser.avatar = event.target.files[0]
-  console.log(newUser.avatar);
+  newUser.avatar = event.files[0]
+  curImage.value = event.files[0].objectURL
 }
 </script>
 
@@ -128,13 +129,16 @@ const handleFileUpload = (event) => {
           </div>
           <div class="mb-4">
             <label class="block text-gray-700 text-sm mb-2">Bio</label>
-            <input
+            <!-- <input
               type="file"
               name="bio"
               placeholder="Votre avatar"
               v-on:change="handleFileUpload"
               class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            /> -->
+
+            <FileUpload mode="basic" name="avatar" url="/api/uploads" accept="image/*" :maxFileSize="1000000"
+                  @select="handleFileUpload" chooseLabel="Ajouter votre avatar" class="p-button-sm p-button-outlined mt-2" />
           </div>
           <div class="mb-4">
             <label class="block text-gray-700 text-sm mb-2">Gender</label>

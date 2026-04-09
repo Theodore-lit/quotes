@@ -11,3 +11,6 @@ export async function deleteLikeById(id) {
 export async function getByUserId(id, quote){
   return Like.find({user: id, quote: quote})
 }
+export async function commentLikeByUser(id, comment){
+  return Like.find({user: id, comment: comment})
+}

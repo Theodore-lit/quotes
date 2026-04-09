@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup >
 import { ref } from 'vue'
 import Tabs from 'primevue/tabs'
 import TabList from 'primevue/tablist'
@@ -20,6 +20,23 @@ const loginStore = useLoginStore()
 const token = loginStore.token
 const decoded = token ? jwtDecode(token) : null
 const confirm = ref(null)
+const badpwd = ref(null)
+const curImage = ref(null)
+
+const confirmAlert = (messsage) => {
+  Swal.fire({
+    title: 'Great!',
+    text: messsage,
+    icon: 'success',
+  })
+}
+const errorAlert = (messsage) => {
+  Swal.fire({
+    title: 'Error!',
+    text: messsage,
+    icon: 'error',
+  })
+}
 
 const makeSure = () => {
   Swal.fire({
@@ -59,18 +76,77 @@ const passwordData = ref({
 const loading = ref(false)
 
 // Fonctions pour les appels API (Backend)
-const updateProfile = () => {
-  loading.value = true
-  // Simuler db.users.updateOne({ _id: ... }, { $set: { username: ... } })
-  setTimeout(() => {
-    loading.value = false
-    console.log('Profil mis à jour !')
-  }, 1000)
+async function updateProfile() {
+  try {
+    loading.value = true
+    // Modification des informations de l'utilisateur
+    const formData = new FormData()
+    formData.append('username', user.value.username)
+    formData.append('bio', user.value.bio)
+    if (user.value.avatar) {
+      formData.append('avatar', user.value.avatar)
+    }
+
+    const response = await fetch(`http://localhost:4000/api/user/${decoded?.sub}`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData
+    })
+    if (!response.ok) {
+      await errorAlert('Modification impossible');
+    }
+    setTimeout(() => {
+      loading.value = false;
+      confirmAlert('Profil mis à jour !')
+    }, 1000)
+  } catch (error) {
+    console.error('Problème au cours du changement :', error)
+  }
+}
+async function updatePassword() {
+  try {
+    loading.value = true
+    // confirmation des entrées de l'utilisateur
+    if (passwordData.value.new !== passwordData.value.confirm) {
+      badpwd.value = true;
+      return;
+    }
+    if (passwordData.value.current == passwordData.value.confirm) {
+      await errorAlert('Vous utilisez ce mot de passe sur plusieurs plateforme');
+      return;
+    }
+
+    // Modification du mot de passe
+    const response = await fetch(`http://localhost:4000/api/user/${decoded?.sub}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        current: passwordData.value.current,
+        passwordHash: passwordData.value.confirm,
+      }),
+    })
+    if (!response.ok) {
+      await errorAlert('Mot de passe invalid :(');
+    }
+    setTimeout(() => {
+      loading.value = false
+      badpwd.value = false;
+      confirmAlert('Mot de passe mis à jour !')
+    }, 1000)
+  } catch (error) {
+    console.error('Problème au cours du changement :', error)
+  }
 }
 
-const onUpload = (event: any) => {
+const onUpload = (event) => {
   // Logique pour envoyer l'image à ton dossier /uploads (Multer)
-  user.value.avatar = event.files[0].objectURL
+  user.value.avatar = event.files[0];
+  curImage.value = event.files[0].objectURL;
 }
 
 
@@ -99,7 +175,8 @@ async function askModification() {
 
 <template>
   <div class="max-w-4xl mx-auto p-6 bg-white shadow-sm rounded-2xl border border-gray-100 mt-10">
-    <button class="p-1 cursor-pointer text-xs text-amber-300 border rounded-lg border-yellow-200" @click="router.back()" >Retour</button>
+    <button class="p-1 cursor-pointer text-xs text-amber-300 border rounded-lg border-yellow-200"
+      @click="router.back()">Retour</button>
     <h1 class="text-2xl font-bold text-gray-800 mb-6">Paramètres du compte</h1>
 
     <Tabs value="0">
@@ -113,41 +190,23 @@ async function askModification() {
           <div class="flex flex-col gap-6 py-4">
             <div class="flex items-center gap-6 p-4 bg-slate-50 rounded-lg">
               <div class="relative">
-                <img
-                  v-if="user.avatar"
-                  :src="user.avatar"
-                  class="w-20 h-20 rounded-full object-cover border-2 border-indigo-500"
-                />
-                <div
-                  v-else
-                  class="w-20 h-20 rounded-full bg-indigo-600 flex items-center justify-center text-white text-2xl font-bold"
-                >
+                <img v-if="user.avatar" :src="curImage"
+                  class="w-20 h-20 rounded-full object-cover border-2 border-indigo-500" />
+                <div v-else
+                  class="w-20 h-20 rounded-full bg-indigo-600 flex items-center justify-center text-white text-2xl font-bold">
                   {{ user.username.substring(0, 2).toUpperCase() }}
                 </div>
               </div>
               <div>
                 <h3 class="font-medium text-gray-700">Photo de profil</h3>
-                <FileUpload
-                  mode="basic"
-                  name="avatar"
-                  url="/api/upload"
-                  accept="image/*"
-                  :maxFileSize="1000000"
-                  @select="onUpload"
-                  chooseLabel="Changer l'avatar"
-                  class="p-button-sm p-button-outlined mt-2"
-                />
+                <FileUpload mode="basic" name="avatar" url="/api/uploads" accept="image/*" :maxFileSize="1000000"
+                  @select="onUpload" chooseLabel="Changer l'avatar" class="p-button-sm p-button-outlined mt-2" />
               </div>
             </div>
 
             <div class="flex flex-col gap-2">
               <label for="username" class="font-semibold text-sm">Nom d'utilisateur</label>
-              <InputText
-                id="username"
-                v-model="user.username"
-                placeholder="Votre pseudo"
-                class="w-full"
-              />
+              <InputText id="username" v-model="user.username" placeholder="Votre pseudo" class="w-full" />
             </div>
 
             <div class="flex flex-col gap-2 opacity-60">
@@ -155,32 +214,22 @@ async function askModification() {
               <InputText id="bio" v-model="user.bio" class="w-full" />
             </div>
 
-            <Button
-              label="Enregistrer les modifications"
-              :loading="loading"
-              @click="updateProfile"
-              class="w-fit"
-            />
+            <Button label="Enregistrer les modifications" :loading="loading" @click="updateProfile" class="w-fit" />
           </div>
         </TabPanel>
 
         <TabPanel value="1">
           <Button v-if="!confirm" @click="askModification()">Modifier votre mot de passe</Button>
 
-          <OPTmodal @codeValid="edidNow = true"  v-if="confirm && !edidNow" />
+          <OPTmodal @codeValid="edidNow = true" v-if="confirm && !edidNow" />
 
           <div v-if="edidNow" class="flex flex-col gap-6 py-4">
             <Message severity="info">Le mot de passe doit contenir au moins 8 caractères.</Message>
 
             <div class="flex flex-col gap-2">
               <label class="font-semibold text-sm">Mot de passe actuel</label>
-              <Password
-                v-model="passwordData.current"
-                toggleMask
-                :feedback="false"
-                class="w-full"
-                inputClass="w-full"
-              />
+              <Password v-model="passwordData.current" toggleMask :feedback="false" class="w-full"
+                inputClass="w-full" />
             </div>
 
             <div class="flex flex-col gap-2">
@@ -190,21 +239,13 @@ async function askModification() {
 
             <div class="flex flex-col gap-2">
               <label class="font-semibold text-sm">Confirmer le nouveau mot de passe</label>
-              <Password
-                v-model="passwordData.confirm"
-                toggleMask
-                :feedback="false"
-                class="w-full"
-                inputClass="w-full"
-              />
+              <Password v-model="passwordData.confirm" toggleMask :feedback="false" class="w-full"
+                inputClass="w-full" />
+              <samp v-if="badpwd" class="text-red-500 text-xm font-medium">Vérifier votre mot de passe</samp>
             </div>
 
-            <Button
-              label="Mettre à jour le mot de passe"
-              severity="danger"
-              icon="pi pi-shield"
-              class="w-fit"
-            />
+            <Button label="Mettre à jour le mot de passe" severity="danger" @click="updatePassword" icon="pi pi-shield"
+              class="w-fit" />
           </div>
         </TabPanel>
       </TabPanels>

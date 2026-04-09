@@ -65,11 +65,7 @@ async function myQuotes() {
 }
 
 const deleteQuote = async (id) => {
-  if (confirm('Supprimer cette citation définitivement ?')) {
-    // Appel API DELETE ici
-    // await fetch(...)
-    // myQuotes()
-  }
+  
 }
 
 onMounted(myQuotes)

@@ -4,6 +4,7 @@ const router = Router();
 
 router.post("/", likesController.create);
 router.get("/", likesController.getOne);
+router.get("/comment", likesController.commentLike);
 router.delete("/:id", likesController.remove);
 
 export default router;
