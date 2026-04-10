@@ -24,9 +24,19 @@ export function googleLogin(req, res, next) {
             avatar: profile.photos[0].value,
             gender: profile._json.gender,
           };
-
+          const us = await User.findOne({ email: user.email });
+          
           // 👉 Cherche l'utilisateur dans MongoDB
           let dbUser = await User.findOne({ googleId: user.googleId });
+
+          // quand l'utilisateur qui ne s'est pas incrit avec google veut se connecter avec google
+          if (us && !dbUser) {
+           dbUser = await User.findOneAndUpdate(
+              { email: user.email },
+              { googleId: user.googleId },
+              { new: true },
+            );
+          }
 
           // 👉 Crée l'utilisateur s'il n'existe pas
           if (!dbUser) {

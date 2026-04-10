@@ -8,6 +8,7 @@ const commentsSchema = new Schema(
     text: { type: String, required: true, minlength: 10 },
     user: { type: Schema.Types.ObjectId, required: true, ref: "User"},
     quote: { type: Schema.Types.ObjectId, ref: "Quote", required: true },
+    likesCount: [{type: Schema.Types.ObjectId, ref: "Like"}],
   },
   { timestamps: true }
 );

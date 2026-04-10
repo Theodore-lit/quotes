@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { createLike, deleteLikeById, getByUserId } from "../services/likes.service.js";
+import { createLike, deleteLikeById, getByUserId, commentLikeByUser } from "../services/likes.service.js";
 
 function isValidObjectId(id) {
   return mongoose.Types.ObjectId.isValid(id);
@@ -39,6 +39,19 @@ export async function getOne(req, res, next){
       return res.status(400).json({ error: { message: "Invalid id" } });
     }
     const like = await getByUserId(userId, quoteId);
+    return res.status(200).json(like);
+  } catch (err) {
+    return next(err);
+  }
+}
+export async function commentLike(req, res, next){
+   try {
+    const  userId  = req.query.userId;
+    const  commentId  = req.query.commentId;
+    if (!isValidObjectId(userId) || !isValidObjectId(commentId)) {
+      return res.status(400).json({ error: { message: "Invalid id" } });
+    }
+    const like = await commentLikeByUser(userId, commentId);
     return res.status(200).json(like);
   } catch (err) {
     return next(err);

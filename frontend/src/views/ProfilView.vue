@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-100 min-h-screen py-12">
+  <div class="min-h-screen py-10">
     <div class="mx-auto max-w-3xl sm:px-6 lg:px-8">
       <!-- Header du Profil -->
       <div
@@ -10,8 +10,9 @@
         >
           <img
             v-if="user?.avatar"
-            :src="`http://localhost:4000/uploads/${user.avatar}`"
+            :src="user.avatar ||`http://localhost:4000/uploads/${user.avatar}`"
             class="h-full w-full object-cover"
+            alt="Profile"
           />
           <span v-else>
             {{ user?.username?.substring(0, 2) }}
@@ -22,7 +23,7 @@
           <div class="flex justify-between gap-5">
             <p class="text-sm text-gray-500">{{ user?.email }}</p>
             <p class="text-sm text-gray-500">{{ user?.gender == 'M' ? 'Homme' : '' }}</p>
-            <p class="text-sm text-gray-500">{{ user?.gender == 'F' ?  'Femme' :  ''}}</p>
+            <p class="text-sm text-gray-500">{{ user?.gender == 'F' ? 'Femme' : '' }}</p>
           </div>
           <p v-if="user?.bio" class="text-sm text-gray-500 py-2">
             <span class="text-gray-800 font-medium">Bio: </span> {{ user?.bio }}
@@ -30,49 +31,41 @@
         </div>
 
         <!-- @click="askModification()" -->
-        <span
-        v-if="user?._id == decoded?.sub"
-        @click="router.push({name: 'settings'})"
-          class="absolute right-5 cursor-pointer hover:bg-amber-200 cursor-prointer top-5 inline-flex items-center justify-center rounded-full bg-amber-100 px-2.5 py-0.5 text-amber-800"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="w-4 h-4"
+        <div v-if="user?._id == decoded?.sub">
+          <span
+            @click="router.push({ name: 'settings' })"
+            class="absolute right-5 cursor-pointer hover:bg-amber-200 cursor-prointer top-5 inline-flex items-center justify-center rounded-full bg-amber-100 px-2.5 py-0.5 text-amber-800"
           >
-            <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
-            <path
-              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.06A1.65 1.65 0 0 0 11 3.09V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.06a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.06A1.65 1.65 0 0 0 20.91 9H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
-            />
-          </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="w-4 h-4"
+            >
+              <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
+              <path
+                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.06A1.65 1.65 0 0 0 11 3.09V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.06a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.06A1.65 1.65 0 0 0 20.91 9H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+              />
+            </svg>
 
-          <p class=" text-sm px-1 whitespace-nowrap">Paramètres</p>
-        </span>
+            <p class="text-sm px-1 whitespace-nowrap">Paramètres</p>
+          </span>
+
+          <button
+            @click="handleLogout"
+            class="cursor-pointer block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-red-50"
+          >
+            Déconnexion
+          </button>
+        </div>
       </div>
     </div>
     <!-- Liste des citations de l'utilisateur -->
     <MyQuotesView />
-    <!-- Bouton flottant -->
-    <button
-      @click="router.push({ name: 'add-quote' })"
-      class="cursor-pointer fixed bottom-8 right-8 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-600 text-white shadow-xl hover:bg-indigo-700 transition-all hover:scale-110 active:scale-95 z-50"
-    >
-      <svg
-        xmlns="http://www.w3.org"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="2.5"
-        stroke="currentColor"
-        class="w-8 h-8"
-      >
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-      </svg>
-    </button>
   </div>
 </template>
 
@@ -104,7 +97,11 @@ async function myQuotes() {
   }
 }
 
-
+const handleLogout = () => {
+  loginStore.logout()
+  decoded.value = null
+  router.push({ name: 'login' })
+}
 
 onMounted(myQuotes)
 </script>

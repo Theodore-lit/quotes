@@ -6,6 +6,7 @@ import { useEditStore } from '@/stores/edit'
 import { jwtDecode } from 'jwt-decode'
 import MyQuotesView from './MyQuotesView.vue'
 import { toLowerCase } from 'zod'
+import FileUpload from 'primevue/fileupload'
 
 // État du formulaire
 const text = ref('')
@@ -15,6 +16,7 @@ const tags = ref([])
 const router = useRouter()
 const loginStore = useLoginStore()
 const editStore = useEditStore()
+const curImage = ref(null)
 // console.log(editStore.edit)
 watch(
   () => editStore.edit,
@@ -116,12 +118,13 @@ async function sendQuote() {
 }
 
 const handleFileUpload = (event) => {
-  image.value = event.target.files[0]
+  image.value = event.files[0]
+  curImage.value = event.files[0].objectURL
 }
 </script>
 
 <template>
-  <div class="bg-gray-100 min-h-screen py-12">
+  <div class=" min-h-screen py-12">
     <div class="mx-auto max-w-3xl sm:px-6 lg:px-8">
       <div class="bg-white shadow sm:rounded-lg p-6">
         <h2 class="text-2xl font-bold text-gray-900 mb-6">Créer une citation</h2>
@@ -134,23 +137,22 @@ const handleFileUpload = (event) => {
               v-model="text"
               rows="4"
               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 border p-2"
-              placeholder="Écrivez quelque chose d'inspirant..."
-              required
-            ></textarea>
+              placeholder="Écrivez quelque chose d'inspirant..." required></textarea>
           </div>
+
 
           <!-- Champ Image (URL) -->
           <div>
-            <label class="block text-sm font-medium text-gray-700"
-              >URL de l'image (optionnel)</label
-            >
-            <input
-              type="file"
-              v-on:change="handleFileUpload"
-              accept="image/*"
+            <label class="block text-sm font-medium text-gray-700">URL de l'image (optionnel)</label>
+            <!-- <input type="file" v-on:change="handleFileUpload" accept="image/*"
               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 border p-2"
-              placeholder="Charger une image(optionel)"
-            />
+              placeholder="Charger une image(optionel)" /> -->
+              <FileUpload mode="basic" name="image" url="/api/uploads" accept="image/*" :maxFileSize="1000000"
+                  @select="handleFileUpload" chooseLabel="Ajouter une image" class="p-button-sm p-button-outlined mt-2" />
+          </div>
+
+          <div class="relative">
+            <img v-if="image" :src="curImage" class="w-full h-100 object-cover border border-gray-300" />
           </div>
 
           <!-- Section Tags -->
@@ -159,34 +161,20 @@ const handleFileUpload = (event) => {
               >Tags: <span class="text-gray-400 text-sm font-light">thèmes abordés</span></label
             >
             <div class="mt-1 flex gap-2">
-              <input
-                v-model="tagInput"
-                @keydown.enter.prevent="addTag"
-                type="text"
+              <input v-model="tagInput" @keydown.enter.prevent="addTag" type="text"
                 class="block flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 border p-2"
-                placeholder="Appuyez sur Entrée pour ajouter"
-              />
-              <button
-                @click.prevent="addTag"
-                type="button"
-                class="cursor-pointer bg-gray-200 px-4 py-2 rounded-md hover:bg-gray-300"
-              >
+                placeholder="Appuyez sur Entrée pour ajouter" />
+              <button @click.prevent="addTag" type="button"
+                class="cursor-pointer bg-gray-200 px-4 py-2 rounded-md hover:bg-gray-300">
                 Ajouter
               </button>
             </div>
             <!-- Liste des tags -->
             <div class="mt-3 flex flex-wrap gap-2">
-              <span
-                v-for="(tag, index) in tags"
-                :key="index"
-                class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-sm"
-              >
+              <span v-for="(tag, index) in tags" :key="index"
+                class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-sm">
                 #{{ tag }}
-                <button
-                  @click="removeTag(index)"
-                  type="button"
-                  class="font-bold hover:text-red-500"
-                >
+                <button @click="removeTag(index)" type="button" class="font-bold hover:text-red-500">
                   ×
                 </button>
               </span>
@@ -195,17 +183,12 @@ const handleFileUpload = (event) => {
 
           <!-- Boutons Actions -->
           <div class="flex justify-end gap-4 pt-4 border-t">
-            <button
-              @click="reset"
-              type="button"
-              class="cursor-pointer text-gray-600 hover:text-gray-800 text-sm font-medium"
-            >
+            <button @click="reset" type="button"
+              class="cursor-pointer text-gray-600 hover:text-gray-800 text-sm font-medium">
               Annuler
             </button>
-            <button
-              type="submit"
-              class="cursor-pointer inline-flex justify-center rounded-md bg-indigo-600 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
+            <button type="submit"
+              class="cursor-pointer inline-flex justify-center rounded-md bg-indigo-600 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
               {{ editStore.edit ? 'Modifier la citation' : 'Publier la citation' }}
             </button>
           </div>

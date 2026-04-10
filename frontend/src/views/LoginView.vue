@@ -50,7 +50,7 @@ async function connect() {
 </script>
 
 <template>
-  <div class="flex justify-center items-center min-h-screen bg-white">
+  <div class="flex justify-center items-center min-h-screen ">
     <div class="w-full flex items-center justify-center">
       <div class="w-3/4 max-w-md p-8 bg-white shadow-lg rounded-lg">
         <h2 class="text-2xl font-bold text-blue-600 mb-6">Login in</h2>

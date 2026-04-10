@@ -3,6 +3,8 @@ import { useRouter, useRoute } from 'vue-router'
 import { useLoginStore } from '@/stores/login'
 import { jwtDecode } from 'jwt-decode'
 import { onMounted, ref, computed } from 'vue'
+import { watch } from 'vue'
+import {LogOut} from 'lucide-vue-next';
 
 const loginStore = useLoginStore()
 const router = useRouter()
@@ -15,6 +17,7 @@ const decodeToken = () => {
   if (loginStore.token) {
     try {
       decoded.value = jwtDecode(loginStore.token)
+      
     } catch (e) {
       console.error('Token invalide')
       loginStore.logout()
@@ -36,7 +39,6 @@ router.afterEach(() => {
 
 // Vérifie si un lien est actif pour changer sa couleur
 const isActive = (routeName) => route.name === routeName
-import { watch } from 'vue'
 
 watch(
   () => loginStore.token,
@@ -48,70 +50,25 @@ watch(
 </script>
 
 <template>
-  <nav class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  <nav class="bg-white  shadow-sm border-b border-gray-200 sticky top-0 z-50">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       <div class="flex h-16 justify-between items-center">
         <!-- Logo -->
         <div class="flex shrink-0 items-center cursor-pointer" @click="router.push('/')">
           <span class="text-2xl font-black text-indigo-600 tracking-tighter">citApp</span>
         </div>
 
-        <!-- Navigation Centrale (Desktop uniquement) -->
-        <div v-if="loginStore.token" class="hidden md:flex items-center gap-2">
-          <button
-            @click="router.push('/')"
-            class="cursor-pointer px-3 py-2 text-sm font-medium rounded-md transition-colors"
-            :class="
-              isActive('home') ? 'text-indigo-600 bg-indigo-50' : 'text-gray-600 hover:bg-gray-50'
-            "
-          >
-            Home
-          </button>
-          <button
-            class="cursor-pointer px-3 py-2 text-sm font-medium rounded-md transition-colors"
-            :class="
-              isActive('explore')
-                ? 'text-indigo-600 bg-indigo-50'
-                : 'text-gray-600 hover:bg-gray-50'
-            "
-          >
-            Explore
-          </button>
-          <button
-            @click="router.push({ name: 'bookmark', params: { id: decoded.sub } })"
-            class="cursor-pointer px-3 py-2 text-sm font-medium rounded-md transition-colors"
-            :class="
-              isActive('bookmark')
-                ? 'text-indigo-600 bg-indigo-50'
-                : 'text-gray-600 hover:bg-gray-50'
-            "
-          >
-            Bookmark
-          </button>
-          <button
-            @click="router.push({ name: 'add-quote' })"
-            class="cursor-pointer px-3 py-2 text-sm font-medium rounded-md transition-colors"
-            :class="
-              isActive('add-quote')
-                ? 'text-indigo-600 bg-indigo-50'
-                : 'text-gray-600 hover:bg-gray-50'
-            "
-          >
-            Create
-          </button>
-        </div>
-
-        <!-- Actions Droite + Bouton Mobile -->
+               <!-- Actions Droite + Bouton Mobile -->
         <div class="flex items-center gap-2">
           <!-- Desktop Actions (Login/User) -->
-          <div class="hidden md:flex items-center gap-4">
-            <template v-if="loginStore.token && decoded">
+          <div class="flex items-center gap-4">
+            <div class="flex justify-center gap-3" v-if="loginStore.token && decoded">
               <div
               @click="router.push({ name: 'profil', params: {id: decoded.sub} })"
-                class="flex cursor-pointer items-center gap-2 px-3 py-1 bg-gray-50 rounded-full border border-gray-100"
+                class="flex cursor-pointer items-center gap-2 px-3 py-1 md:bg-gray-50 md:rounded-full md:border md:border-gray-100"
               >
                 <div
-                  class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-indigo-600 text-white font-extralight uppercase text-xs  overflow-hidden"
+                  class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-indigo-600 text-white font-extralight uppercase text-xs  overflow-hidden"
                 >
                   <img
                     v-if="decoded?.avatar"
@@ -122,15 +79,11 @@ watch(
                     {{ decoded?.username?.substring(0, 2) }}
                   </span>
                 </div>
-                <span class="text-sm font-medium text-gray-700">{{ decoded?.username }}</span>
+                <span class="text-sm hidden md:flex font-medium text-gray-700">{{ decoded?.username }}</span>
               </div>
-              <button
-                @click="handleLogout"
-                class="cursor-pointer text-sm font-medium text-gray-500 hover:text-red-600"
-              >
-                Quitter
-              </button>
-            </template>
+              <LogOut @click="handleLogout" title="Deconnexion"
+                class="cursor-pointer text-red-500 hover:text-red-600" />
+            </div>
             <template v-else>
               <button
                 @click="router.push({ name: 'login' })"
@@ -148,7 +101,7 @@ watch(
           </div>
 
           <!-- Bouton Dropdown Mobile (Hamburger) -->
-          <button
+          <!-- <button
             v-if="loginStore.token"
             @click="isMenuOpen = !isMenuOpen"
             class="cursor-pointer md:hidden p-2 rounded-md text-gray-600 hover:bg-gray-100 focus:outline-none"
@@ -174,13 +127,13 @@ watch(
                 d="M6 18L18 6M6 6l12 12"
               />
             </svg>
-          </button>
+          </button> -->
         </div>
       </div>
     </div>
 
     <!-- Menu Dropdown Mobile (Contenu) -->
-    <div
+    <!-- <div
       v-if="loginStore.token"
       v-show="isMenuOpen"
       class="md:hidden border-t border-gray-100 bg-white"
@@ -238,7 +191,7 @@ watch(
           </template>
         </div>
       </div>
-    </div>
+    </div> -->
   </nav>
 </template>
 

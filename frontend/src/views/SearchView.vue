@@ -48,6 +48,7 @@ const filteredQuotes = computed(() => {
 
 async function getQuotes() {
   try {
+    if (!search.value && !tags.value) return;
     const response = await fetch(
       `http://localhost:4000/api/quotes?page=${page.value}&limit=${limit.value}&search=${search.value}&tags=${tags.value}`,
     )
@@ -71,31 +72,53 @@ onMounted(getQuotes)
 </script>
 
 <template>
-  <div class=" min-h-screen pb-8 pt-5 space-y-6 px-4">
-
-      <h2>Découvrez les meilleurs citations avec citApp</h2>
-      <div>Plus de {{ filteredQuotes.length }} citations</div>
-      <div v-for="quote in filteredQuotes" :key="quote._id" class="bg-white shadow rounded-lg">
-        <Quote :quote="quote" @userAction="getQuotes()" />
-      </div>
-    
-
-    <!-- Bouton flottant -->
-    <!-- <button
-      @click="router.push({ name: 'add-quote' })"
-      class="cursor-pointer fixed bottom-8 right-8 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-600 text-white shadow-xl hover:bg-indigo-700 transition-all hover:scale-110 active:scale-95 z-50"
-    >
-      <svg
-        xmlns="http://www.w3.org"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="2.5"
-        stroke="currentColor"
-        class="w-8 h-8"
+  <div class=" min-h-screen py-12">
+    <div class="mx-auto max-w-3xl sm:px-6 lg:px-8 space-y-6">
+      <!-- 🔍 Barre de recherche + filtres -->
+      <div
+        class="bg-white shadow sm:rounded-lg p-4 flex flex-col md:flex-row gap-4 md:items-center md:justify-between"
       >
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-      </svg>
-    </button> -->
+        <!-- Input recherche -->
+        <div class="flex-1">
+          <input
+            v-model="search"
+            type="text"
+            placeholder="Rechercher une citation..."
+            class="w-full px-4 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+          />
+        </div>
+
+        <!-- Boutons filtres -->
+        <div class="flex items-center gap-2">
+          <select
+            v-model="tags"
+            class="cursor-pointer px-3 py-2 bg-gray-100 text-gray-600 hover:bg-gray-200 text-sm font-medium rounded-md transition-colors"
+          >
+            <option value="">Tout les Tags</option>
+            <option v-for="tags in allTags" :value="tags">{{tags}}</option>
+          </select>
+
+          <button
+            @click="setFilter(!filterPopu)"
+            class="cursor-pointer px-3 py-2 text-sm font-medium rounded-md transition-colors"
+            :class="
+              filterPopu
+                ? 'bg-indigo-600 text-white'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            "
+          >
+            Populaire
+          </button>
+        </div>
+      </div>
+      <!-- 2. La boucle v-for uniquement sur la carte -->
+      <div v-if="filteredQuotes.length > 0" v-for="quote in filteredQuotes" :key="quote._id" class="bg-white shadow sm:rounded-lg">
+        <Quote :quote="quote" @userAction="getQuotes()" />
+      </div> 
+      <div v-else >
+        Aucune citation ne correspond à votre recherche. 
+      </div>
+    </div>
   </div>
 </template>
 

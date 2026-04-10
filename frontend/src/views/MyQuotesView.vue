@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-100 min-h-screen py-12">
+  <!-- <div class="bg-gray-100 min-h-screen py-12"> -->
     <div class="mx-auto max-w-3xl sm:px-6 lg:px-8">
       <!-- Header du Profil -->
 
@@ -33,7 +33,7 @@
       </div>
     </div>
     
-  </div>
+  <!-- </div> -->
 </template>
 
 <script setup>
@@ -65,11 +65,7 @@ async function myQuotes() {
 }
 
 const deleteQuote = async (id) => {
-  if (confirm('Supprimer cette citation définitivement ?')) {
-    // Appel API DELETE ici
-    // await fetch(...)
-    // myQuotes()
-  }
+  
 }
 
 onMounted(myQuotes)
