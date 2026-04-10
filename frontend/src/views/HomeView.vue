@@ -145,11 +145,11 @@ onMounted(getQuotes)
 </script>
 
 <template>
-  <div class="bg-gray-100 min-h-screen py-12">
+  <div class="bg-gray-100 min-h-screen pb-12 pt-5 px-4">
     <div class="mx-auto max-w-3xl sm:px-6 lg:px-8 space-y-6">
       <!-- 🔍 Barre de recherche + filtres -->
       <div
-        class="bg-white shadow sm:rounded-lg p-4 flex flex-col md:flex-row gap-4 md:items-center md:justify-between"
+        class="bg-white shadow rounded-lg p-4 flex flex-col md:flex-row gap-4 md:items-center md:justify-between"
       >
         <!-- Input recherche -->
         <div class="flex-1">
@@ -185,7 +185,7 @@ onMounted(getQuotes)
         </div>
       </div>
       <!-- 2. La boucle v-for uniquement sur la carte -->
-      <div v-for="quote in filteredQuotes" :key="quote._id" class="bg-white shadow sm:rounded-lg">
+      <div v-for="quote in filteredQuotes" :key="quote._id" class="bg-white shadow rounded-lg">
         <Quote :quote="quote" @userAction="getQuotes()" />
       </div>
     </div>

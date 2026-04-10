@@ -21,7 +21,8 @@
           <h1 class="text-2xl font-bold text-gray-900">{{ user?.username }}</h1>
           <div class="flex justify-between gap-5">
             <p class="text-sm text-gray-500">{{ user?.email }}</p>
-            <p class="text-sm text-gray-500">{{ user?.gender == 'M' ? 'Homme' : 'Femme' }}</p>
+            <p class="text-sm text-gray-500">{{ user?.gender == 'M' ? 'Homme' : '' }}</p>
+            <p class="text-sm text-gray-500">{{ user?.gender == 'F' ?  'Femme' :  ''}}</p>
           </div>
           <p v-if="user?.bio" class="text-sm text-gray-500 py-2">
             <span class="text-gray-800 font-medium">Bio: </span> {{ user?.bio }}
@@ -32,7 +33,7 @@
         <span
         v-if="user?._id == decoded?.sub"
         @click="router.push({name: 'settings'})"
-          class="absolute right-5 cursor-prointer top-5 inline-flex items-center justify-center rounded-full bg-green-100 px-2.5 py-0.5 text-green-700"
+          class="absolute right-5 cursor-pointer hover:bg-amber-200 cursor-prointer top-5 inline-flex items-center justify-center rounded-full bg-amber-100 px-2.5 py-0.5 text-amber-800"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -50,7 +51,7 @@
             />
           </svg>
 
-          <p class="text-sm px-1 whitespace-nowrap">Paramètres</p>
+          <p class=" text-sm px-1 whitespace-nowrap">Paramètres</p>
         </span>
       </div>
     </div>

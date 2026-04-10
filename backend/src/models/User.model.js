@@ -10,11 +10,12 @@ const userSchema = new Schema(
       lowercase: true,
       unique: true,
     },
-    passwordHash: { type: String, required: true, select: false },
+    googleId: { type: String, unique: true, sparse: true },
+    passwordHash: { type: String, select: false },
     role: { type: String, enum: ["admin", "user"], default: "user" },
-    bio: {type: String, minlength: 7},
-    gender: {type: String, enum: ["M", "F"], required: true},
-    avatar: { type: String, default: "" }
+    bio: { type: String, minlength: 7 },
+    gender: { type: String, enum: ["M", "F"] },
+    avatar: { type: String, default: "" },
   },
   { timestamps: true },
 );

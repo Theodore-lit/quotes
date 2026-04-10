@@ -10,7 +10,7 @@ const quotesSchema = new Schema(
   {
     image: { type: String},
     text: { type: String, required: true, minlength: 10 },
-    tags: { type: [String], default: [] },
+    tags: { type: [String] },
     author: { type: Schema.Types.ObjectId, ref: "User", required: true },
     commentsCount: [{type: Schema.Types.ObjectId, ref: "Comment"}],
     likesCount: [{type: Schema.Types.ObjectId, ref: "Like"}],

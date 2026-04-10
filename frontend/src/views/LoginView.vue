@@ -1,9 +1,11 @@
 <script setup>
-import { reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { reactive, ref, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { apiFetch } from '@/services/api.js'
 import { useLoginStore } from '@/stores/login'
+
 const router = useRouter()
+const route = useRoute()
 const loginStore = useLoginStore()
 const cannotConnect = ref(null)
 
@@ -12,22 +14,35 @@ const candidateUser = reactive({
   password: '',
 })
 
+onMounted(() => {
+  // Vérifie si on revient de Google OAuth avec token
+  const token = route.query.token
+  if (token) {
+    try {
+      loginStore.login({token})
+      router.push('/home')
+    } catch (error) {
+      console.error('Erreur lors du parsing des données Google:', error)
+    }
+  }
+})
+
 async function connect() {
   try {
     const data = await fetch('http://localhost:4000/api/auth/login', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      email: candidateUser.email,
-      password: candidateUser.password,
-    }),
-  })
-if (!data.ok) return cannotConnect.value = true
-  const user = await data.json()
-  loginStore.login(user)
-  router.push('/home')
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: candidateUser.email,
+        password: candidateUser.password,
+      }),
+    })
+    if (!data.ok) return cannotConnect.value = true
+    const user = await data.json()
+    loginStore.login(user)
+    router.push('/home')
   } catch (error) {
     console.error(error)
   }
@@ -70,6 +85,10 @@ if (!data.ok) return cannotConnect.value = true
             Login
           </button>
         </form>
+
+<a href="http://localhost:4000/api/auth/google">
+  Se connecter avec Google
+</a>
 
         <p class="mt-6 text-sm text-center text-gray-600">
           Already have an account?

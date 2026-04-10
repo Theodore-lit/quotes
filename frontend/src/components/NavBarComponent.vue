@@ -115,7 +115,7 @@ watch(
                 >
                   <img
                     v-if="decoded?.avatar"
-                    :src="`http://localhost:4000/uploads/${decoded.avatar}`"
+                    :src=" decoded.avatar || `http://localhost:4000/uploads/${decoded.avatar}`"
                     class="h-full w-full object-cover"
                   />
                   <span v-else>

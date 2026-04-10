@@ -38,16 +38,9 @@ async function register() {
     const data = await fetch('http://localhost:4000/api/auth/register', {
       method: 'POST',
       headers: {
-        // 'Content-Type': 'application/json',
       },
       body: formData,
-      // body: JSON.stringify({
-      //   username: newUser.username,
-      //   email: newUser.email,
-      //   password: newUser.password,
-      //   gender: newUser.gender,
-      //   bio: newUser.bio,
-      // }),
+      
     })
     console.log(formData)
     if (!data.ok) return console.log("Impossible de s'inscrire")

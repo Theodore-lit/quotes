@@ -13,6 +13,7 @@ const decoded = ref('')
 const timeAgo = (date) => {
   return formatDistanceToNow(new Date(date), { addSuffix: true, locale: fr })
 }
+
 const token = loginStore.token
 if (token) {
   decoded.value = jwtDecode(token)
@@ -97,6 +98,7 @@ const props = defineProps({
 
 const emit = defineEmits(['userAction'])
 const isHovered = ref(false)
+
 </script>
 
 <template>
@@ -159,64 +161,11 @@ const isHovered = ref(false)
       </Transition>
     </div>
 
-    <!-- <Transition
-      enter-active-class="transition ease-out duration-200"
-      enter-from-class="opacity-0 translate-y-1"
-      enter-to-class="opacity-100 translate-y-0"
-      leave-active-class="transition ease-in duration-150"
-      leave-from-class="opacity-100 translate-y-0"
-      leave-to-class="opacity-0 translate-y-1"
-    >
-      <article v-if="isHovered" class="rounded-xl border border-gray-700 bg-gray-800 lg:w-1/2 p-4">
-        <div class="flex items-center gap-4">
-          <div
-            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-indigo-600 text-white font-bold uppercase text-sm overflow-hidden"
-          >
-            <img
-              v-if="props.quote.author?.avatar"
-              :src="`http://localhost:4000/uploads/${props.quote.author.avatar}`"
-              class="h-full w-full object-cover"
-            />
-            <span v-else>
-              {{ props.quote.author?.username?.substring(0, 2) }}
-            </span>
-          </div>
-
-          <div>
-            <h3
-              class="cursor-pointer text-lg font-medium text-white"
-            >
-              {{ props.quote.author?.username }}
-            </h3>
-
-            <div class="flow-root">
-              <p class="text-xs font-medium text-gray-300">{{ props.quote.author?.email }}</p>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <p class="mt-1 text-xs font-medium py-1 text-gray-300">
-            <span v-if="props.quote.author?.bio" class="font-medium text-xm text-gray-300"
-              >Bio:
-            </span>
-            {{ props.quote.author?.bio }}
-          </p>
-        </div>
-        <button
-          class="mt-1 cursor-pointer text-xs font-medium text-green-300"
-          @click="router.push({ name: 'profil', params: { id: props.quote.author._id } })"
-        >
-          Voir plus
-        </button>
-      </article>
-    </Transition> -->
-
-    <div class="mt-2 max-w-xl text-sm text-gray-700">
+    <div class="mt-2 max-w-xl text-lg text-gray-700">
       <p>{{ props.quote.text }}</p>
     </div>
-    <div class="mt-3 flex gap-4 text-sm text-gray-600">
-      <p class="p-1 bg-indigo-200 rounded-lg" v-for="tags in props.quote.tags">#{{ tags }}</p>
+    <div class="mt-3 flex gap-4 text-sm text-gray-800">
+      <p class="p-1 bg-indigo-300 rounded-xl px-2" v-if="props.quote.tags.length > 0" v-for="tags in props.quote.tags" v-show="tags && tags.trim()">#{{ tags }}</p>
     </div>
 
     <div v-if="props.quote.image" class="mt-4 overflow-hidden rounded-lg border border-gray-200">
@@ -228,9 +177,10 @@ const isHovered = ref(false)
     </div>
 
     <!-- Section Boutons -->
-    <div class="mt-6 flex items-center gap-6 border-t border-gray-100 pt-4">
+    <div class="mt-6 flex items-center justify-between  border-t border-gray-100 pt-4">
       <!-- Coeur (Like) -->
-      <button
+      <div class="mt-6 flex items-center gap-6" >
+        <button
         @click="liked(props.quote._id, decoded.sub)"
         class="cursor-pointer group flex items-center gap-1 transition-colors"
         :class="isLiked(props.quote) ? 'text-red-600' : 'text-gray-500 hover:text-red-500'"
@@ -274,6 +224,7 @@ const isHovered = ref(false)
         </svg>
         <span class="text-xs">{{ props.quote.commentsCount?.length || 0 }}</span>
       </button>
+      </div>
 
       <!-- Favoris -->
       <button

@@ -18,7 +18,6 @@ export async function createCode({ email, code }) {
       subject: "Test OTP",
       text: `Ton code est ${code}`,
     }).then((result) => {
-      console.log("Email envoyé:", result);
       Code.create({
           email,
           code,

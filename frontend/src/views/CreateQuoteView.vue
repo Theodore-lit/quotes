@@ -5,6 +5,7 @@ import { useLoginStore } from '@/stores/login'
 import { useEditStore } from '@/stores/edit'
 import { jwtDecode } from 'jwt-decode'
 import MyQuotesView from './MyQuotesView.vue'
+import { toLowerCase } from 'zod'
 
 // État du formulaire
 const text = ref('')
@@ -31,7 +32,7 @@ const decoded = token ? jwtDecode(token) : null
 
 // Ajouter un tag à la liste
 const addTag = () => {
-  const val = tagInput.value.trim()
+  const val = toLowerCase(tagInput.value.trim())
   if (val && !tags.value.includes(val)) {
     tags.value.push(val)
     tagInput.value = ''
@@ -128,9 +129,7 @@ const handleFileUpload = (event) => {
         <form @submit.prevent="send" class="space-y-6" enctype="multipart/form-data">
           <!-- Champ Texte -->
           <div>
-            <label class="block text-sm font-medium text-gray-700"
-              >Votre citation </label
-            >
+            <label class="block text-sm font-medium text-gray-700">Votre citation </label>
             <textarea
               v-model="text"
               rows="4"
@@ -156,7 +155,9 @@ const handleFileUpload = (event) => {
 
           <!-- Section Tags -->
           <div>
-            <label class="block text-sm font-medium text-gray-700">Tags: <span class="text-gray-400 text-sm font-light" >thèmes abordés</span></label>
+            <label class="block text-sm font-medium text-gray-700"
+              >Tags: <span class="text-gray-400 text-sm font-light">thèmes abordés</span></label
+            >
             <div class="mt-1 flex gap-2">
               <input
                 v-model="tagInput"
@@ -211,6 +212,6 @@ const handleFileUpload = (event) => {
         </form>
       </div>
     </div>
-    <MyQuotesView/>
+    <MyQuotesView />
   </div>
 </template>
