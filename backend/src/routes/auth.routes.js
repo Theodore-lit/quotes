@@ -7,6 +7,6 @@ router.get("/google", passport.authenticate("google", { scope: ["profile", "emai
 router.post("/register", authController.register);
 router.post("/login", authController.login);
 router.get("/profil/:id", authController.getProfile);
-router.get("/google/callback", passport.authenticate("google", {session: false, failureRedirect: "/login" }), authController.googleAuthCallback);
+router.get("/google/callback", passport.authenticate("google", {session: false, failureRedirect: `${process.env.FRONTEND_UR}/login`}), authController.googleAuthCallback);
 
 export default router

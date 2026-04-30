@@ -5,7 +5,7 @@ export async function createComment(payload) {
 }
 
 export async function getCommentById(id) {
-  return Comment.findOne({_id: id}).populate("author quote")
+  return Comment.findOne({_id: id}).populate("user quote")
 }
 
 export async function updateCommentById(id, payload) {
@@ -22,13 +22,18 @@ export async function deleteCommentById(id) {
 export async function listComments({ page = 1, limit = 5, quoteId}) {
   const safePage = Math.max(Number(page) || 1, 1);
   const safeLimit = Math.min(Math.max(Number(limit) || 5, 1), 50);
+  const filter = {}
+  if (quoteId) {
+    filter.quote = quoteId
+  }
 
   const items = await Promise.all([
-    Comment.find({quote: quoteId})
+    Comment.find(filter)
       .sort({ creatAt: -1 })
       .skip((safePage - 1) * safeLimit)
       .limit(safeLimit)
-      .populate("user quote"),
+      .populate("user quote")
+      .populate("likesCount"),
   ]);
 
   return {

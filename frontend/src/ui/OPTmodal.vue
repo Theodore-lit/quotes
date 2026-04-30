@@ -1,5 +1,5 @@
 <template>
-  <h2 class="text-2xl text-center">Entrez le code envoyé sur {{ decoded?.email }}</h2>
+  <h2 class="text-lg text-center my-3">Vous aviez reçu un code sur "********{{ decoded?.email.substring(8, decoded?.email.length) }}"</h2>
 
   <div class="card flex justify-center p-10">
     <Form
@@ -30,6 +30,7 @@ import Button from 'primevue/button'
 import { jwtDecode } from 'jwt-decode'
 import { useLoginStore } from '@/stores/login'
 import Swal from 'sweetalert2'
+import { verifyCode } from '@/services/code'
 const emit = defineEmits(['codeValid', 'codeUnvalid'])
 
 const loginStore = useLoginStore()
@@ -63,36 +64,21 @@ async function onFormSubmit(event) {
 
 async function toValid(codeFinal) {
   try {
-    const response = await fetch(`http://localhost:4000/api/code/verify`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        email: decoded?.email,
-        code: codeFinal,
-      }),
+    await verifyCode({ email: decoded?.email, code: codeFinal })
+    emit('codeValid')
+    Swal.fire({
+      icon: 'success',
+      title: 'Code récupéré !',
+      text: `Le code est valid`,
+      confirmButtonColor: '#4f46e5',
     })
-    if (response.ok) {
-      emit('codeValid')
-      // 3. Succès
-      Swal.fire({
-        icon: 'success',
-        title: 'Code récupéré !',
-        text: `Le code est valid`,
-        confirmButtonColor: '#4f46e5',
-      })
-      return
-    }
+  } catch (error) {
     emit('codeUnvalid')
-
     Swal.fire({
       icon: 'error',
       title: 'Oops...',
       text: 'Code incorret!',
     })
-  } catch (error) {
     console.error('Problème au cours de vérification du code :', error)
   }
 }

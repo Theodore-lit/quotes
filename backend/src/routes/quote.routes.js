@@ -5,6 +5,7 @@ const router = Router();
 
 router.get("/", quotesController.list);
 router.post("/", quotesController.create);
+router.get("/tags", quotesController.tags);
 router.get("/bookMark/:id", quotesController.listMark);
 router.get("/userQuotes/:id", quotesController.userQuotes);
 router.get("/:id", quotesController.getOne);

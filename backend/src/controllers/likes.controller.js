@@ -7,8 +7,10 @@ function isValidObjectId(id) {
 
 export async function create(req, res, next) {
   try {
-    const article = await createLike(req.body);
-    return res.status(201).json({ data: article });
+    const like = await createLike(req.body);
+    const io = req.app.get("socketio");
+    io.emit("like_quote_created", like);
+    return res.status(201).json({ data: like });
   } catch (error) {
     return next(error);
   }
@@ -24,6 +26,8 @@ export async function remove(req, res, next) {
     const deleted = await deleteLikeById(id);
     if (!deleted)
       return res.status(404).json({ error: { message: "Article not found" } });
+    const io = req.app.get("socketio");
+    io.emit("like_quote_deleted", deleted._id);
     return res.status(204).json({ message: "ok" });
   } catch (err) {
     return next(err);
@@ -52,6 +56,13 @@ export async function commentLike(req, res, next){
       return res.status(400).json({ error: { message: "Invalid id" } });
     }
     const like = await commentLikeByUser(userId, commentId);
+    const io = req.app.get("socketio");
+    if (like.length > 0) {
+      io.emit("like_comment_deleted", like._id);
+    } else {
+      io.emit("like_comment_created", like);
+      // const newLike = await createLike({user: userId, comment: commentId})
+    }
     return res.status(200).json(like);
   } catch (err) {
     return next(err);

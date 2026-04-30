@@ -22,8 +22,10 @@ export async function list(req, res, next) {
 
 export async function create(req, res, next) {
   try {
-    const article = await createComment(req.body);
-    return res.status(201).json({ data: article });
+    const comment = await createComment(req.body);
+    const io = req.app.get("socketio");
+    io.emit("comment_created", comment);
+    return res.status(201).json({ data: comment });
   } catch (error) {
     return next(error);
   }
@@ -39,15 +41,15 @@ export async function getOne(req, res, next) {
         },
       });
     }
-    const article = await getCommentById(id);
-    if (!article) {
+    const comment = await getCommentById(id);
+    if (!comment) {
       return res.status(404).json({
         error: {
-          message: "Article not Found",
+          message: "comment not Found",
         },
       });
     }
-    res.status(200).json({ data: article });
+    res.status(200).json({ data: comment });
   } catch (error) {
     next(error);
   }
@@ -60,10 +62,12 @@ export async function update(req, res, next) {
       return res.status(400).json({ error: { message: "Invalid id" } });
     }
 
-    const article = await updateCommentById(id, req.body);
-    if (!article)
+    const comment = await updateCommentById(id, req.body);
+    if (!comment)
       return res.status(404).json({ error: { message: "Article not found" } });
-    return res.status(200).json({ data: article });
+    const io = req.app.get("socketio");
+    io.emit("comment_updated", comment._id);
+    return res.status(200).json({ data: comment });
   } catch (err) {
     return next(err);
   }
@@ -79,6 +83,8 @@ export async function remove(req, res, next) {
     const deleted = await deleteCommentById(id);
     if (!deleted)
       return res.status(404).json({ error: { message: "Article not found" } });
+    const io = req.app.get("socketio");
+    io.emit("comment_deleted", deleted._id);
     return res.status(204).json({ message: "ok" });
   } catch (err) {
     return next(err);

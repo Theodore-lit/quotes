@@ -108,6 +108,7 @@ import { useLoginStore } from '@/stores/login'
 import { jwtDecode } from 'jwt-decode'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { getQuoteById, deleteQuote as deleteQuoteRequest, userQuotes as fetchUserQuotes } from '@/services/quotes'
 
 const router = useRouter()
 const loginStore = useLoginStore()
@@ -118,11 +119,7 @@ const quotes = ref(null)
 
 async function myQuotes() {
   try {
-    const response = await fetch(`http://localhost:4000/api/quotes/userQuotes/${decoded.sub}`)
-    if (!response.ok) throw new Error('Erreur réseau')
-    const result = await response.json()
-    // Si ton API renvoie { data: [...] }, ajuste ici
-    quotes.value = result.data || result
+    quotes.value = await fetchUserQuotes(decoded.sub)
   } catch (error) {
     console.error('Problème au cours du chargement :', error)
     quotes.value = []
@@ -130,18 +127,14 @@ async function myQuotes() {
 }
 
 async function deleteQuote(id) {
-  const response = await fetch(`http://localhost:4000/api/quotes/${id}`, {
-    method: 'DELETE',
-  })
-  if (!response.ok) throw new Error('Erreur réseau')
+  await deleteQuoteRequest(id)
   myQuotes()
 }
 
 async function editQuote(quoteId) {
   try {
-    const res = await fetch(`http://localhost:4000/api/quotes/${quoteId}`)
-    const quote = await res.json()
-    editStore.toEdit(quote.data)
+    const quote = await getQuoteById(quoteId)
+    editStore.toEdit(quote)
     router.push('/addquote')
   } catch (error) {
     console.log(error)

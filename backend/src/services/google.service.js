@@ -24,9 +24,10 @@ export function googleLogin(req, res, next) {
             avatar: profile.photos[0].value,
             gender: profile._json.gender,
           };
+          
+          // vérification de l'utilisateur avec googleId et email
           const us = await User.findOne({ email: user.email });
           
-          // 👉 Cherche l'utilisateur dans MongoDB
           let dbUser = await User.findOne({ googleId: user.googleId });
 
           // quand l'utilisateur qui ne s'est pas incrit avec google veut se connecter avec google
@@ -38,12 +39,12 @@ export function googleLogin(req, res, next) {
             );
           }
 
-          // 👉 Crée l'utilisateur s'il n'existe pas
+          // Créer l'utilisateur s'il n'existe pas
           if (!dbUser) {
             dbUser = await User.create(user);
           }
 
-          // 👉 Crée le token JWT
+          //  token JWT
           const token = jwt.sign(
             {
               sub: String(dbUser._id),
@@ -56,7 +57,6 @@ export function googleLogin(req, res, next) {
             JWT_SECRET,
             { expiresIn: JWT_EXPIRES_IN },
           );
-          // req.user = { user: dbUser, token };
           return done(null, { user: dbUser, token });
         } catch (error) {
           return done(error);

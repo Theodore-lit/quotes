@@ -40,20 +40,52 @@ export const getAllUsers = async ({ page, limit, search, role }) => {
 };
 
 export const updateUser = async (userId, updateData) => {
-  const user = findById(userId).select("+passwordHash");
-  if (updateData.passwordHash && updateData.current) {
+  // 1. Récupération de l'utilisateur avec son hash actuel
+  const user = await User.findById(userId).select("+passwordHash");
+
+  if (!user) {
+    const err = new Error("Utilisateur non trouvé");
+    err.statusCode = 404;
+    throw err;
+  }
+
+  // 2. Logique intelligente pour le mot de passe
+  if (updateData.passwordHash) {
+    
+    // Cas A : L'utilisateur a déjà un mot de passe en base
+    if (user.passwordHash) {
+      if (!updateData.current) {
+        const err = new Error("Le mot de passe actuel est requis pour cette modification");
+        err.statusCode = 400;
+        throw err;
+      }
+
       const ok = await bcrypt.compare(updateData.current, user.passwordHash);
       if (!ok) {
-        const err = new Error("Invalid credentials");
+        const err = new Error("Mot de passe actuel incorrect");
         err.statusCode = 401;
         throw err;
-    }
+      }
+    } 
+    // Cas B : Pas de passwordHash (Utilisateur Google). 
+    // On laisse passer sans vérifier 'current'.
+
+    // Hashage du nouveau mot de passe
     const salt = await bcrypt.genSalt(10);
     updateData.passwordHash = await bcrypt.hash(updateData.passwordHash, salt);
   }
-  return User.findByIdAndUpdate(userId, updateData, { new: true }).select(
-    "-passwordHash",
-  );
+
+  // 3. Nettoyage des données temporaires avant l'update
+  delete updateData.current;
+
+  // 4. Mise à jour finale
+  const updated = await User.findByIdAndUpdate(
+    userId, 
+    { $set: updateData }, // Utilisation de $set pour être précis
+    { new: true, runValidators: true }
+  ).select("-passwordHash");
+
+  return updated;
 };
 
 export const deleteUser = async (userId) => {

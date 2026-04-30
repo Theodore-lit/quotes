@@ -1,38 +1,37 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import cors from "cors";
-import passport from "passport";
-import session from "express-session";
-import path from "path";
-import { fileURLToPath } from "url";
-import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import { googleLogin } from "./services/google.service.js";
+import cors from 'cors';
+import passport from 'passport';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-// Importations de tes fichiers
-import apiRouter from "./routes/index.js";
+import { googleLogin } from './services/google.service.js';
+import apiRouter from './routes/index.js';
 import notFound from './middlewares/notFound.js';
 import errorHandler from './middlewares/errorHandler.js';
-import upload from './middlewares/multerConfig.js';
 
 dotenv.config();
 
 const app = express();
+const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+const corsOptions = {
+  origin: frontendUrl,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-app.use(cors());
+app.use(cors(corsOptions));
+app.options(/.*/, cors(corsOptions));
 app.use(express.json());
 
-// Configuration de la stratégie de google OAuth
 googleLogin();
 
 app.use(passport.initialize());
-
-// Rend le dossier "uploads" accessible publiquement via l'URL /uploads
-app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
-
-app.use("/api", apiRouter);
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use('/api', apiRouter);
 
 app.use(notFound);
 app.use(errorHandler);

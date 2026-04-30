@@ -8,7 +8,8 @@ function isValidObjectId(id) {
 export async function create(req, res, next) {
   try {
     const mark = await createBookmark(req.body);
-    console.log(mark)
+    const io = req.app.get("socketio");
+    io.emit("bookmark_quote_created", mark);
     return res.status(201).json(mark);
   } catch (error) {
     return next(error);
@@ -23,9 +24,10 @@ export async function remove(req, res, next) {
     }
 
     const deleted = await deleteBookmarkById(id);
-    console.log(deleted)
     if (!deleted)
       return res.status(404).json({ error: { message: "Article not found" } });
+    const io = req.app.get("socketio");
+    io.emit("bookmark_quote_deleted", deleted._id);
     return res.status(204).json({ message: "ok" });
   } catch (err) {
     return next(err);

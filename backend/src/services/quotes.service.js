@@ -6,7 +6,9 @@ export async function createQuote(payload) {
 }
 
 export async function getQuoteById(id) {
-  return Quote.findOne({ _id: id }).populate("author commentsCount likesCount bookmarksCount");
+  return Quote.findOne({ _id: id }).populate(
+    "author commentsCount likesCount bookmarksCount",
+  );
 }
 
 export async function updateQuoteById(id, payload) {
@@ -50,6 +52,10 @@ export async function deleteQuoteById(id) {
 //   }
 // }
 
+export async function listTags() {
+  return Quote.distinct("tags");
+}
+
 export async function listQuotes({ page = 1, limit = 10, search, tags }) {
   const safePage = Math.max(Number(page) || 1, 1);
   const safeLimit = Math.min(Math.max(Number(limit) || 10, 1), 50);
@@ -58,22 +64,13 @@ export async function listQuotes({ page = 1, limit = 10, search, tags }) {
   if (search) {
     filter.text = { $regex: search, $options: "i" };
   }
-
-  if (tags) {
+  if (tags && tags.length > 0) {
     // Si tags est un tableau dans ta DB, MongoDB filtrera si 'tags' est présent dedans
-    filter.tags = { $regex: tags, $options: "i" };
+    filter.tags = { $in: tags};
   }
 
-  // if (tgs){
-  //   filter.tags = {
-  //     $in : tags;
-  //   }
-  // }
 
-  // console.log(await Quote.find({}))
-  // console.log(filter)
-
-  const [items, total, allTags] = await Promise.all([
+  const [items, total] = await Promise.all([
     Quote.find(filter)
       .sort({ createdAt: -1 }) // <-- Corrigé : createdAt au lieu de creatAt
       .skip((safePage - 1) * safeLimit)
@@ -83,9 +80,7 @@ export async function listQuotes({ page = 1, limit = 10, search, tags }) {
       .populate("bookmarksCount")
       .exec(), // Optionnel : améliore les perfs si tu ne modifies pas les objets après
     Quote.countDocuments(filter),
-    Quote.distinct("tags"),
   ]);
-
 
   return {
     items,
@@ -94,7 +89,6 @@ export async function listQuotes({ page = 1, limit = 10, search, tags }) {
       limit: safeLimit,
       total,
     },
-    allTags,
   };
 }
 export async function listBookmark(id) {
@@ -116,7 +110,11 @@ export async function listBookmark(id) {
 
 export async function quotesUser(id) {
   try {
-    const quotes = await Quote.find({ author: id }).sort({ createdAt: -1 }).populate("author").populate("likesCount").populate("bookmarksCount");
+    const quotes = await Quote.find({ author: id })
+      .sort({ createdAt: -1 })
+      .populate("author")
+      .populate("likesCount")
+      .populate("bookmarksCount");
     return quotes;
   } catch (error) {
     console.log(error);

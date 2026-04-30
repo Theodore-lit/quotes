@@ -5,10 +5,9 @@
 
       <!-- Liste des citations de l'utilisateur -->
       <div class="space-y-6">
-        <h2 class="text-xl font-semibold text-indigo-700 px-4 sm:px-0">Publications</h2>
+        <h2 class="text-xl font-semibold text-gray-900 pt-5 px-4 sm:px-0">Publications</h2>
 
-        <div v-if="!quotes" class="text-center py-10 text-gray-400 animate-pulse">
-          Récupération des pensées...
+        <div v-if="!quotes" class="text-center py-10 text-gray-800 animate-s animate-spin rounded-full">
         </div>
 
         <template v-else-if="quotes.length > 0">
@@ -25,7 +24,7 @@
           <p class="text-gray-500">Vous n'avez pas encore publié de citations.</p>
           <button
             @click="router.push({ name: 'add-quote' })"
-            class="mt-4 text-indigo-600 font-bold hover:underline"
+            class="mt-4 text-amber-300 font-bold hover:underline"
           >
             Écrire ma première citation
           </button>
@@ -37,11 +36,23 @@
 </template>
 
 <script setup>
+
+const props = defineProps({
+  reload : Boolean
+})
 import Quote from '@/components/Quote.vue'
 import { useLoginStore } from '@/stores/login'
 import { jwtDecode } from 'jwt-decode'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { userQuotes } from '@/services/quotes'
+import { useWebSocketStore } from '@/stores/webSocketStore'
+const socketStore = useWebSocketStore()
+
+const filteredQuotes = computed(() => {
+  let result = [...socketStore.quotes] // On pioche dans le store !
+  return result
+})
 
 const router = useRouter()
 const route = useRoute()
@@ -53,20 +64,20 @@ const quotes = ref(null)
 async function myQuotes() {
   try {
     const ID = route.params.id
-    const response = await fetch(`http://localhost:4000/api/quotes/userQuotes/${ID}`)
-    if (!response.ok) throw new Error('Erreur réseau')
-    const result = await response.json()
-    // Si ton API renvoie { data: [...] }, ajuste ici
-    quotes.value = result.data || result
+    quotes.value = await userQuotes(ID)
   } catch (error) {
     console.error('Problème au cours du chargement :', error)
     quotes.value = []
   }
 }
 
-const deleteQuote = async (id) => {
-  
-}
+watch(
+  () =>props.reload,
+  (reload) => {
+    if (reload) myQuotes()
+  }
+)
+
 
 onMounted(myQuotes)
 </script>

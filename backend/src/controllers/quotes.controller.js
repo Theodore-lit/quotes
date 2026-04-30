@@ -4,6 +4,7 @@ import {
   deleteQuoteById,
   getQuoteById,
   listQuotes,
+  listTags,
   updateQuoteById,
   listBookmark,
   quotesUser,
@@ -21,7 +22,16 @@ export async function list(req, res, next) {
       search: req.query.search,
       tags: req.query.tags,
     });
-    return res.status(200).json({ data: quotes.items, allTags: quotes.allTags });
+    return res.status(200).json({ data: quotes.items});
+  } catch (error) {
+    return next(error);
+  }
+}
+
+export async function tags(req, res, next){
+  try {
+    const tags = await listTags();
+    return res.status(200).json({ data: tags});
   } catch (error) {
     return next(error);
   }
@@ -54,6 +64,8 @@ export async function userQuotes(req, res, next){
       });
     }
     const quotes = await quotesUser(id);
+    const io = req.app.get('socketio')
+    io.emit("quote_of_user", quotes)
     return res.status(200).json(quotes);
   } catch (error) {
     return next(error);
@@ -69,8 +81,10 @@ export async function create(req, res, next) {
     if (payload.tags && typeof payload.tags === "string") {
       payload.tags = payload.tags.split(",").filter((t) => t.trim());
     }
-    const article = await createQuote(payload);
-    return res.status(201).json({ data: article });
+    const quote = await createQuote(payload);
+    const io = req.app.get("socketio");
+    io.emit("quote_created", quote);
+    return res.status(201).json({ data: quote });
   } catch (error) {
     return next(error);
   }
@@ -118,6 +132,8 @@ export async function update(req, res, next) {
     const article = await updateQuoteById(id, payload);
     if (!article)
       return res.status(404).json({ error: { message: "Article not found" } });
+    const io = req.app.get("socketio");
+    io.emit("quote_updated", article);
     return res.status(200).json({ data: article });
   } catch (err) {
     return next(err);
@@ -134,6 +150,8 @@ export async function remove(req, res, next) {
     const deleted = await deleteQuoteById(id);
     if (!deleted)
       return res.status(404).json({ error: { message: "Article not found" } });
+    const io = req.app.get("socketio");
+    io.emit("quote_deleted", deleted._id);
     return res.status(204).json({ message: "ok" });
   } catch (err) {
     return next(err);

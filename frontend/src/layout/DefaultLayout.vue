@@ -34,11 +34,11 @@ watch(
 </script>
 
 <template>
-  <div class="bg-gray-50">
+  <div class="bg-white">
     <div class="mx-auto max-w-3xl sm:px-6 lg:px-8">
       <NavBarComponent v-if="decoded && !isAuthPage" />
       <router-view></router-view>
-      <div class="text-gray-400 italic text-center pb-10">
+      <div class="text-gray-400 text-sm italic text-center pb-10">
         ©Tout Droit Réservé Mise en ligne par Li't-dev
       </div>
       <FooterNavComponent v-if="decoded && !isAuthPage" />

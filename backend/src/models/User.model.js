@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 const userSchema = new Schema(
   {
-    username: { type: String, required: true, trim: true, minlength: 2 },
+    username: { type: String, required: true, trim: true, minlength: 3 },
     email: {
       type: String,
       required: true,
@@ -11,7 +11,7 @@ const userSchema = new Schema(
       unique: true,
     },
     googleId: { type: String, unique: true, sparse: true },
-    passwordHash: { type: String, select: false },
+    passwordHash: { type: String, select: false, minlength: 6 },
     role: { type: String, enum: ["admin", "user"], default: "user" },
     bio: {type: String, minlength: 7},
     gender: {type: String, enum: ["M", "F"]},

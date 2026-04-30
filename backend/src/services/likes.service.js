@@ -14,3 +14,6 @@ export async function getByUserId(id, quote){
 export async function commentLikeByUser(id, comment){
   return Like.find({user: id, comment: comment})
 }
+export async function listLikes(){
+  return Like.find().populate("user quote comment")
+}

@@ -34,20 +34,20 @@ watch(
 </script>
 
 <template>
-  <nav class="flex sticky bottom-0 max-w-200 p-4 justify-around bg-gray-200  rounded-t-lg h-15 items-center">
+  <nav class="flex sticky opacity-30 bottom-0 max-w-200 p-4 justify-around bg-gray-800  rounded-t-sm h-15 items-center">
     <Home @click="router.push('/')" class="cursor-pointer px-3 py-2 text-sm font-medium rounded-md transition-colors"
-      :class="isActive('home') ? 'text-indigo-600 bg-indigo-50' : 'text-gray-400 hover:bg-gray-50'" :size="50" />
+      :class="isActive('home') ? 'text-amber-600 bg-amber-50' : 'text-white hover:bg-gray-50 hover:text-gray-700'" :size="50" />
     <Search @click="router.push('/search')"
-      class="cursor-pointer px-3 py-2 text-sm font-medium rounded-md transition-colors" :class="isActive('search') ? 'text-indigo-600 bg-indigo-50' : 'text-gray-400 hover:bg-gray-50'
+      class="cursor-pointer px-3 py-2 text-sm font-medium rounded-md transition-colors" :class="isActive('search') ? 'text-amber-600 bg-amber-50' : 'text-white hover:bg-gray-50 hover:text-gray-700'
         " :size="50" />
     <PlusSquare @click="router.push({ name: 'add-quote', params: { id: decoded?.sub } })"
-      class="cursor-pointer px-3 py-2 text-sm font-medium rounded-md transition-colors" :class="isActive('add-quote') ? 'text-indigo-600 bg-indigo-50' : 'text-gray-400 hover:bg-gray-50'
+      class="cursor-pointer px-3 py-2 text-sm font-medium rounded-md transition-colors" :class="isActive('add-quote') ? 'text-amber-600 bg-amber-50' : 'text-white hover:bg-gray-50 hover:text-gray-700'
         " :size="50" />
     <Star @click="router.push({ name: 'bookmark', params: { id: decoded?.sub } })"
-      class="cursor-pointer px-3 py-2 text-sm font-medium rounded-md transition-colors" :class="isActive('bookmark') ? 'text-amber-500 bg-amber-100' : 'text-gray-400 hover:bg-gray-50'
+      class="cursor-pointer px-3 py-2 text-sm font-medium rounded-md transition-colors" :class="isActive('bookmark') ? 'text-amber-600 bg-amber-50' : 'text-white hover:bg-gray-50 hover:text-gray-700'
         " :size="50" />
     <UserCircle @click="router.push({ name: 'profil', params: { id: decoded?.sub } })"
-      class="cursor-pointer px-3 py-2 text-sm font-medium rounded-md transition-colors" :class="isActive('profil') ? 'text-indigo-600 bg-indigo-50' : 'text-gray-400 hover:bg-gray-50'
+      class="cursor-pointer px-3 py-2 text-sm font-medium rounded-md transition-colors" :class="isActive('profil') ? 'text-amber-600 bg-amber-50' : 'text-white hover:bg-gray-50 hover:text-gray-700'
         " :size="50" />
   </nav>
 </template>

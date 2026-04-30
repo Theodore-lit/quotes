@@ -4,7 +4,8 @@ import { useLoginStore } from '@/stores/login'
 import { jwtDecode } from 'jwt-decode'
 import { onMounted, ref, computed } from 'vue'
 import { watch } from 'vue'
-import {LogOut} from 'lucide-vue-next';
+import { LogOut } from 'lucide-vue-next';
+import { confirmLogout } from '@/utils/notifications'
 
 const loginStore = useLoginStore()
 const router = useRouter()
@@ -17,7 +18,7 @@ const decodeToken = () => {
   if (loginStore.token) {
     try {
       decoded.value = jwtDecode(loginStore.token)
-      
+
     } catch (e) {
       console.error('Token invalide')
       loginStore.logout()
@@ -25,7 +26,10 @@ const decodeToken = () => {
   }
 }
 
-const handleLogout = () => {
+
+async function handleLogout() {
+  const confirm = await confirmLogout()
+  if (!confirm) return
   loginStore.logout()
   decoded.value = null
   router.push({ name: 'login' })
@@ -50,51 +54,57 @@ watch(
 </script>
 
 <template>
-  <nav class="bg-white  shadow-sm border-b border-gray-200 sticky top-0 z-50">
+  <nav class="bg-white border-b border-gray-100 px-4 sticky top-0 z-50">
     <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       <div class="flex h-16 justify-between items-center">
         <!-- Logo -->
         <div class="flex shrink-0 items-center cursor-pointer" @click="router.push('/')">
-          <span class="text-2xl font-black text-indigo-600 tracking-tighter">citApp</span>
+
+
+          <svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M50 25C36.19 25 25 36.19 25 50C25 54.2 26.05 58.15 27.85 61.6L25 72L35.4 69.15C38.85 70.95 42.8 72 47 72C60.81 72 72 60.81 72 47"
+              stroke="#F59E0B" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+
+            <circle cx="50" cy="48" r="13" stroke="#F59E0B" stroke-width="6" />
+
+            <path d="M68 33L66.5 29.5L63 28L66.5 26.5L68 23L69.5 26.5L73 28L69.5 29.5L68 33Z" fill="#F59E0B" />
+
+            <line x1="62" y1="21" x2="63.5" y2="19" stroke="#F59E0B" stroke-width="2.5" stroke-linecap="round" />
+            <line x1="68" y1="18" x2="68" y2="15" stroke="#F59E0B" stroke-width="2.5" stroke-linecap="round" />
+            <line x1="74" y1="21" x2="72.5" y2="19" stroke="#F59E0B" stroke-width="2.5" stroke-linecap="round" />
+          </svg>
+
+          <!-- <span class="text-2xl font-black text-amber-600 tracking-tighter">citApp</span> -->
         </div>
 
-               <!-- Actions Droite + Bouton Mobile -->
+        <!-- Actions Droite + Bouton Mobile -->
         <div class="flex items-center gap-2">
           <!-- Desktop Actions (Login/User) -->
           <div class="flex items-center gap-4">
             <div class="flex justify-center gap-3" v-if="loginStore.token && decoded">
-              <div
-              @click="router.push({ name: 'profil', params: {id: decoded.sub} })"
-                class="flex cursor-pointer items-center gap-2 px-3 py-1 md:bg-gray-50 md:rounded-full md:border md:border-gray-100"
-              >
+              <div @click="router.push({ name: 'profil', params: { id: decoded.sub } })"
+                class="flex cursor-pointer items-center gap-2 px-3 py-1 md:bg-gray-50 md:rounded-full md:border md:border-gray-100">
                 <div
-                  class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-indigo-600 text-white font-extralight uppercase text-xs  overflow-hidden"
-                >
-                  <img
-                    v-if="decoded?.avatar"
-                    :src=" decoded.avatar || `http://localhost:4000/uploads/${decoded.avatar}`"
-                    class="h-full w-full object-cover"
-                  />
+                  class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gray-400 text-white font-extralight uppercase text-xs  overflow-hidden">
+                  
+                  <img v-if="decoded?.avatar" :src="decoded.avatar.startsWith('http') ? decoded.avatar : `http://localhost:4000/uploads/${decoded.avatar}`"
+                    class="h-full w-full object-cover" />
                   <span v-else>
                     {{ decoded?.username?.substring(0, 2) }}
                   </span>
                 </div>
                 <span class="text-sm hidden md:flex font-medium text-gray-700">{{ decoded?.username }}</span>
               </div>
-              <LogOut @click="handleLogout" title="Deconnexion"
-                class="cursor-pointer text-red-500 hover:text-red-600" />
+              <LogOut @click="handleLogout" :size="22" title="Deconnexion"
+                class="cursor-pointer absolute bottom-5 right-2 text-red-500 hover:text-red-600" />
             </div>
             <template v-else>
-              <button
-                @click="router.push({ name: 'login' })"
-                class="cursor-pointer text-sm font-medium text-gray-600"
-              >
+              <button @click="router.push({ name: 'login' })" class="cursor-pointer text-sm font-medium text-gray-600">
                 Connexion
               </button>
-              <button
-                @click="router.push({ name: 'register' })"
-                class="cursor-pointer bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-bold"
-              >
+              <button @click="router.push({ name: 'register' })"
+                class="cursor-pointer bg-amber-600 text-white px-4 py-2 rounded-md text-sm font-bold">
                 S'inscrire
               </button>
             </template>
@@ -200,6 +210,7 @@ watch(
 span {
   transition: transform 0.2s ease;
 }
+
 span:hover {
   transform: scale(1.02);
 }

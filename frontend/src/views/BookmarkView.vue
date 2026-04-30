@@ -1,5 +1,5 @@
 <template>
-  <div class=" min-h-screen py-12">
+  <div class=" min-h-screen py-12 px-4">
     <div class="mx-auto max-w-3xl sm:px-6 lg:px-8 space-y-6">
       <h2 class="text-2xl font-bold text-gray-900 mb-6 px-4 sm:px-0">Mes Favoris</h2>
 
@@ -19,7 +19,7 @@
             <!-- Header : Identique à l'accueil -->
             <div class="flex items-center gap-3 mb-4">
               <div
-                class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-indigo-600 text-white font-bold uppercase text-sm"
+                class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-600 text-white font-bold uppercase text-sm"
               >
                 {{ quote.author?.username?.substring(0, 2) }}
               </div>
@@ -27,7 +27,7 @@
                 <h3 class="text-lg font-medium leading-6 text-gray-900">
                   {{ quote.author?.username }}
                 </h3>
-                <p class="text-xs text-indigo-500 font-medium">Favori enregistré</p>
+                <p class="text-xs text-amber-500 font-medium">Favori enregistré</p>
               </div>
             </div>
 
@@ -40,7 +40,7 @@
             <div class="mt-6 flex items-center justify-between border-t border-gray-100 pt-4">
               <button
                 @click="router.push({ name: 'comment-quote', params: { id: quote._id } })"
-                class="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                class="text-sm font-medium text-amber-600 hover:text-amber-500"
               >
                 Voir la discussion →
               </button>
@@ -92,7 +92,7 @@
         <div class="mt-6">
           <button
             @click="router.push('/')"
-            class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+            class="inline-flex items-center rounded-md bg-amber-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-amber-500"
           >
             Explorer les citations
           </button>
@@ -105,6 +105,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { userBookmarks } from '@/services/quotes'
 
 const route = useRoute()
 const router = useRouter()
@@ -113,11 +114,7 @@ const quotes = ref(null)
 
 async function getBookmark() {
   try {
-    const response = await fetch(`http://localhost:4000/api/quotes/bookMark/${quoteId}`)
-    if (!response.ok) throw new Error('Erreur réseau')
-    const result = await response.json()
-    // On s'attend à recevoir un tableau d'objets Quote
-    quotes.value = result.data || result
+    quotes.value = await userBookmarks(quoteId)
   } catch (error) {
     console.error('Problème au cours du chargement :', error)
     quotes.value = []
@@ -126,8 +123,6 @@ async function getBookmark() {
 
 async function removeBookmark(id) {
   // Optionnel : ajouter ici la logique pour supprimer le favori et rafraîchir
-  // await fetch(...)
-  // getBookmark()
 }
 
 onMounted(getBookmark)

@@ -7,21 +7,13 @@
 
 <script setup>
 import { ref } from "vue";
+import { sendChatMessage } from '@/services/chat'
 
 const msg = ref("");
 const reply = ref("");
 
 const send = async () => {
-  const res = await fetch("http://localhost:4000/chat", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ message: msg.value }),
-  });
-
-  const data = await res.json();
-  reply.value = data.reply;
+  reply.value = await sendChatMessage(msg.value)
 };
 </script>
 
