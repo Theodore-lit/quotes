@@ -87,11 +87,10 @@ async function edit() {
     tags.value = []
     editStore.reset()
     notifySuccess("Modifier avec success")
-    reloadQuotes.value = true;
+    router.push({name: 'home'})
   } catch (error) {
     notifyWarning('Le texte doit faire au moins 10 caractères.')
   }
-  reloadQuotes.value = false;
 }
 
 async function sendQuote() {
@@ -111,11 +110,10 @@ async function sendQuote() {
 
     await createQuote(formData)
     notifySuccess("Citation ajouté avec success")
-    reloadQuotes.value = true;
+    router.push({name: 'home'})
   } catch (error) {
     notifyWarning('Le texte doit faire au moins 10 caractères.')
   }
-  reloadQuotes.value = false;
 }
 
 const handleFileUpload = (event) => {
@@ -150,7 +148,7 @@ onMounted(
             <!-- <input type="file" v-on:change="handleFileUpload" accept="image/*"
               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 border p-2"
               placeholder="Charger une image(optionel)" /> -->
-            <FileUpload mode="basic" name="image" url="/api/uploads" accept="image/*" :maxFileSize="1000000"
+            <FileUpload mode="basic" name="image" url="/api/uploads" accept="image/*" :maxFileSize="52428800"
               @select="handleFileUpload" chooseLabel="Ajouter une image" class="p-button-sm p-button-outlined mt-2" />
           </div>
 

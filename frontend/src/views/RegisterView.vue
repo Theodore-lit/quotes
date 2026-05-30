@@ -49,7 +49,6 @@ const goToSecurity = () => {
 
 async function register() {
   try {
-    console.log(newUser.password, )
     if (confirmPass.value !== newUser.password) return notifyWarning('Le mot de passe dois avoir au moins 6 caractères')
     const formData = new FormData();
     formData.append("username", newUser.username);
@@ -111,7 +110,7 @@ const handleFileUpload = (event) => {
           </div>
           <div class="mb-4">
             <label class="block text-gray-700 text-sm mb-2">Bio</label>
-            <FileUpload mode="basic" name="avatar" url="/api/uploads" accept="image/*" :maxFileSize="1000000"
+            <FileUpload mode="basic" name="avatar" url="/api/uploads" accept="image/*" :maxFileSize="52428800"
               @select="handleFileUpload" chooseLabel="Ajouter votre avatar"
               class="p-button-sm p-button-outlined mt-2" />
           </div>
@@ -174,7 +173,7 @@ const handleFileUpload = (event) => {
               alt="Avatar" />
           </div>
           <div class="flex flex-col gap-6 py-4">
-            <FileUpload mode="basic" name="avatar" url="/api/uploads" accept="image/*" :maxFileSize="1000000"
+            <FileUpload mode="basic" name="avatar" url="/api/uploads" accept="image/*" :maxFileSize="52428800"
               @select="handleFileUpload" chooseLabel="Ajouter votre avatar"
               class="p-button-sm p-button-outlined mt-2" />
               

@@ -30,9 +30,9 @@ io.on("connection", async (socket) => {
 
   // Ici, on récupère les données initiales
   try {
-    const allQuotes = await listQuotes({ page: 1, limit: 10 });    
+    const allQuotes = await listQuotes();    
     socket.emit("initial_quotes", allQuotes);
-    const allComments = await listComments({ page: 1, limit: 10 });
+    const allComments = await listComments();
     socket.emit("initial_comments", allComments.items);
     const allLikes = await listLikes();
     socket.emit("initial_likes", allLikes);

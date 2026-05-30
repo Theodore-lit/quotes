@@ -82,9 +82,10 @@ export async function create(req, res, next) {
       payload.tags = payload.tags.split(",").filter((t) => t.trim());
     }
     const quote = await createQuote(payload);
+    const quotePopulated = await getQuoteById(quote._id);
     const io = req.app.get("socketio");
-    io.emit("quote_created", quote);
-    return res.status(201).json({ data: quote });
+    io.emit("quote_created", quotePopulated);
+    return res.status(201).json({ data: quotePopulated });
   } catch (error) {
     return next(error);
   }

@@ -23,9 +23,10 @@ export async function list(req, res, next) {
 export async function create(req, res, next) {
   try {
     const comment = await createComment(req.body);
+    const populateComment =  await getCommentById(comment._id);
     const io = req.app.get("socketio");
-    io.emit("comment_created", comment);
-    return res.status(201).json({ data: comment });
+    io.emit("comment_created", populateComment);
+    return res.status(201).json({ data: populateComment });
   } catch (error) {
     return next(error);
   }

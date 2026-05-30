@@ -23,11 +23,11 @@ export async function register(req, res, next) {
     if (!user) return res.status(204).json({ message: "entrée invalid" });
     return res.status(201).json(user);
   } catch (error) {
-    if (err.statusCode === 409) {
+    if (error.statusCode === 409) {
       // Code spécifique à MongoDB pour les doublons (Email)
       return res.status(409).json({ message: "Cet email est déjà utilisé" });
     }
-    if (err.name === "ValidationError") {
+    if (error.name === "ValidationError") {
       return res
         .status(400)
         .json({ message: "Données invalides : vérifiez la taille du nom" });

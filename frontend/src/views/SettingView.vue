@@ -39,9 +39,9 @@ const reset = () => {
   curImage.value = null
   toUpdate.value = null
   router.push('/settings')
-  user.username = null;
-  user.bio = null;
-  user.avatar = null;
+  user.value.username = '';
+  user.value.bio = '';
+  user.value.avatar = null;
   
 }
 
@@ -63,22 +63,25 @@ const loading = ref(false)
 // Fonctions pour les appels API (Backend)
 function updateProfile() {
     loading.value = true
+    badpwd.value = false
     const formData = new FormData()
     // confirmation des entrées de l'utilisateur
     if ( passwordData.value.new && passwordData.value.new !== passwordData.value.confirm) {
       badpwd.value = true
+      loading.value = false
       return
     }
-    if ( passwordData.value.new && passwordData.value.current == passwordData.value.confirm) {
-      notifyError('Vous utilisez ce mot de passe sur plusieurs plateforme')
+    if ( passwordData.value.new && passwordData.value.current === passwordData.value.new) {
+      notifyError('Le nouveau mot de passe doit être différent de l\'ancien')
+      loading.value = false
       return
     }
 
     if (passwordData.value.current) {
         formData.append('current', passwordData.value.current)
       }
-      if (passwordData.value.confirm) {
-        formData.append('passwordHash', passwordData.value.confirm)
+      if (passwordData.value.new) {
+        formData.append('passwordHash', passwordData.value.new)
       }
     // Modification des informations de l'utilisateur
     if (user.value.username) {
@@ -93,10 +96,13 @@ function updateProfile() {
     userService.updateProfile(decoded?.sub, formData).then((response) => {
       setTimeout(() => {
       loading.value = false
+      badpwd.value = false
     }, 1000)
     notifySuccess('Modification réussi')
     reset();
     }).catch((error) => {
+      loading.value = false
+      badpwd.value = false
       notifyError('Modification échoué', error)
     })
 }
@@ -197,7 +203,7 @@ const handleSecurity = () => {
                 name="avatar"
                 url="/api/uploads"
                 accept="image/*"
-                :maxFileSize="1000000"
+                :maxFileSize="52428800"
                 @select="onUpload"
                 chooseLabel="Changer l'avatar"
                 class="p-button-sm p-button-outlined mt-2"

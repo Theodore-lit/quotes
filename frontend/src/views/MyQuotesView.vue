@@ -43,7 +43,7 @@ const props = defineProps({
 import Quote from '@/components/Quote.vue'
 import { useLoginStore } from '@/stores/login'
 import { jwtDecode } from 'jwt-decode'
-import { onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { userQuotes } from '@/services/quotes'
 import { useWebSocketStore } from '@/stores/webSocketStore'

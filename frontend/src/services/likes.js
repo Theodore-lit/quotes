@@ -30,7 +30,11 @@ export async function getLikesForComment({ userId, commentId }) {
 }
 
 export async function likeComment({ user, comment }) {
-  const res = await api.post('/likes', { user, comment })
+  const res = await api.post('/likes/comment', { user, comment })
   return res.data
 }
+export async function unLikeComment(likeId) {
+ await api.delete(`/likes/comment/${likeId}`)
+}
+
 

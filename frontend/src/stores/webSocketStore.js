@@ -51,12 +51,15 @@ socket.value.on('quote_of_user', (data) => {
 
     // Commentaires
     socket.value.on('initial_comments', (data) => {
+      console.log("Commentaires initiaux reçus via WebSocket:", data)
       comments.value = data.items // On remplit le store avec tout le contenu de la base
     })
 
     socket.value.on('comment_created', (newComment) => {
+      console.log(" commentaires reçu via WebSocket:", comments.value)
       const index = quotes.value.findIndex((q) => q._id === newComment.quote)
       const updatedQuote = { ...quotes.value[index] }
+      comments.value.push(newComment);
       if (index !== -1) {
         if (!updatedQuote.commentsCount) updatedQuote.commentsCount = []
         if (!updatedQuote.commentsCount.includes(newComment._id)) {
@@ -94,6 +97,7 @@ socket.value.on('quote_of_user', (data) => {
         
     socket.value.on('like_quote_created', (newLike) => {
       // 1. Mise à jour de la liste de référence
+
       likes.value.unshift(newLike)
       // 2. Mise à jour de la citation dans la liste (pour le compteur visuel)
       const index = quotes.value.findIndex((q) => q._id === newLike.quote)
@@ -119,17 +123,17 @@ socket.value.on('quote_of_user', (data) => {
     // Interractions pour les commentaires
     socket.value.on('like_comment_created', (newLike) => {
       // 1. Mise à jour de la liste de référence
+      console.log(comments.value)
       likes.value.unshift(newLike)
 
       // 2. Mise à jour de la citation dans la liste (pour le compteur visuel)
-      console.log("Nouveau like de commentaire reçu via socket:", newLike) // Debug
       const index = comments.value.findIndex((q) => q._id === newLike.comment)
-      console.log("Commentaire trouvé pour le like:", comments.value)
-       = updatedComment // Debug
+      console.log("Commentaire trouvé pour le like:", comments.value) 
       if (index !== -1) {
+        console.log("Index trouvé :", index)
         if (!comments.value[index].likesCount) comments.value[index].likesCount = []
         if (!comments.value[index].likesCount.some((l) => l._id === newLike._id)) {
-          comments.value[index].likesCount = [...comments.value[index].likesCount, newLike]
+          comments.value[index].likesCount.push(newLike);
         }
       }
     })

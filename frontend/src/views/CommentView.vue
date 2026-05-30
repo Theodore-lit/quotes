@@ -19,7 +19,7 @@ import {
   updateComment,
   deleteComment as deleteCommentRequest,
 } from '@/services/comments'
-import { getLikesForComment, likeComment, unlikeLike } from '@/services/likes'
+import { getLikesForComment, likeComment, unLikeComment, unlikeLike } from '@/services/likes'
 import Quote from '@/components/Quote.vue'
 const socketStore = useWebSocketStore()
 let decoded = ref('')
@@ -65,20 +65,18 @@ async function getQuoteDetails() {
 
 async function listComment() {
   try {
-    const response = await listComments({ page: 1, limit: 15, quoteId })
-    socketStore.comments = response.items[0];
-    
+    const response = await listComments({ page: 1, limit: 15, quoteId });
+    socketStore.comments = response.items || [];    
   } catch (err) {
     notifyError(err)
   }
 }
 const comments = computed(()=> {
-  let result = socketStore.comments // On pioche dans le store !
+   let  result = [...socketStore.comments]; // On pioche dans le store !
   // const quoteId = route.params.id
   // if (quoteId) {
   //   result = result.filter(comment => comment.quote == quoteId)
   // }
-  console.log(result)
   result = result?.filter(comment => comment)
   return result
 })
@@ -109,7 +107,7 @@ async function liked(commentId, userId) {
     // Si le like existe déjà (tableau non vide), on le supprime (Unlike)
     if (existingLikes.length > 0) {
       const likeId = existingLikes[0]._id
-      await unlikeLike(likeId)
+      await unLikeComment(likeId)
     } else {
       await likeComment({ user: userId, comment: commentId })
     }
