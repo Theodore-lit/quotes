@@ -63,7 +63,7 @@ async function liked(quoteId, userId) {
     }
     emit('userAction')
   } catch (error) {
-    console.error('Problème au cours du chargement :', error)
+    notifyError('un problème est survenue au cours de l\'action. Veuillez réessayer')
   }
 }
 
@@ -79,7 +79,7 @@ async function bookmarked(quoteId, userId) {
     }
     emit('userAction')
   } catch (error) {
-    console.error('Problème au cours du chargement :', error)
+    notifyWarning('Problème au cours du chargement de la page')
   }
 }
 
@@ -127,7 +127,7 @@ const shareQuote = async (quote) => {
     } catch (err) {
       // L'utilisateur a annulé ou une erreur est survenue
       if (err.name !== 'AbortError') {
-        console.error('Erreur de partage :', err)
+      notifyWarning('Le lien est copié dans votre presse papier');
         fallbackShare(shareUrl)
       }
     }
@@ -156,7 +156,7 @@ const isHovered = ref(false)
 </script>
 
 <template>
-  <div @click="closeMenu" class="relative px-4 py-5 rounded sm:p-6 bg-slate-100 shadow-lg shadow-amber-50">
+  <div @click="closeMenu" class="relative px-4 py-5 rounded-lg sm:p-6 bg-gradient-to-br from-amber-50 to-amber-100 shadow-lg shadow-amber-200 border border-amber-200 hover:shadow-xl hover:shadow-amber-300 transition-all duration-300">
       <!-- <button
         @click="editQuote(props.quote._id)"
         class="cursor-pointer p-1 text-blue-600 hover:bg-blue-50 rounded"
@@ -200,7 +200,7 @@ const isHovered = ref(false)
       <div v-if="decoded.sub" class="cursor-pointer absolute right-4 top-4">
         <button
           @click.stop="showMenu = !showMenu"
-          class="cursor-pointer p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors"
+          class="cursor-pointer p-2 text-amber-600 hover:text-amber-700 hover:bg-amber-200 rounded-full transition-colors"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -222,7 +222,7 @@ const isHovered = ref(false)
         <div
           v-if="showMenu"
           @click.stop
-          class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 py-1 z-50 text-sm"
+          class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-amber-300 py-1 z-50 text-sm"
         >
           <!-- Actions réservées à l'auteur -->
           <template v-if="isAuthor(props.quote)">
@@ -230,7 +230,7 @@ const isHovered = ref(false)
 
             <button
               @click="editQuote(props.quote._id)"
-              class="w-full px-4 py-2 text-left hover:bg-gray-100 flex items-center gap-3 text-blue-600"
+              class="w-full px-4 py-2 text-left hover:bg-amber-50 flex items-center gap-3 text-amber-600"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -251,7 +251,7 @@ const isHovered = ref(false)
 
             <button
               @click="deleteQuote(props.quote._id)"
-              class="cursor-pointer w-full px-4 py-2 text-left hover:bg-gray-100 flex items-center gap-3 text-red-600"
+              class="cursor-pointer w-full px-4 py-2 text-left hover:bg-red-50 flex items-center gap-3 text-red-600"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -273,7 +273,7 @@ const isHovered = ref(false)
           <!-- Partager (visible par tous) -->
           <button
             @click="shareQuote(props.quote)"
-            class="cursor-pointer w-full px-4 py-2 text-left hover:bg-gray-100 flex items-center gap-3 text-gray-700"
+            class="cursor-pointer w-full px-4 py-2 text-left hover:bg-amber-50 flex items-center gap-3 text-amber-700"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -301,7 +301,7 @@ const isHovered = ref(false)
     >
       <div class="flex items-center gap-3 mb-4 cursor-pointer">
         <div
-          class="flex h-10 w-10 shrink-0 items-center justify-center border-2 border-blue-50 rounded-full bg-gray-200 text-white font-bold uppercase text-sm overflow-hidden"
+          class="flex h-10 w-10 shrink-0 items-center justify-center border-2 border-amber-300 rounded-full bg-amber-200 text-amber-900 font-bold uppercase text-sm overflow-hidden"
         >
           <img
             v-if="props.quote.author?.avatar"
@@ -318,7 +318,7 @@ const isHovered = ref(false)
           <h3 class="text-lg font-medium leading-6 text-gray-900">
             {{ props.quote.author?.username }}
           </h3>
-          <p class="text-xs font-medium text-blue-700">{{ timeAgo(props.quote.createdAt) }}</p>
+          <p class="text-xs font-medium text-amber-600">{{ timeAgo(props.quote.createdAt) }}</p>
         </div>
       </div>
 
@@ -333,7 +333,7 @@ const isHovered = ref(false)
       >
         <article
           v-if="isHovered"
-          class="absolute z-50 bottom-full left-0 mb-2 w-64 p-4 bg-white rounded-lg shadow-2xl border border-gray-200"
+          class="absolute z-50 bottom-full left-0 mb-2 w-64 p-4 bg-white rounded-lg shadow-2xl border border-amber-300 bg-gradient-to-br from-white to-amber-50"
         >
           <div class="absolute h-4 w-full top-full left-0 bg-transparent"></div>
 
@@ -345,7 +345,7 @@ const isHovered = ref(false)
             <div class="border-t pt-2 mt-2">
               <button
                 @click="router.push({ name: 'profil', params: { id: props.quote.author._id } })"
-                class="text-xs cursor-pointer bg-blue-700 text-white px-3 py-1 rounded"
+                class="text-xs cursor-pointer bg-amber-600 hover:bg-amber-700 text-white px-3 py-1 rounded transition-colors"
               >
                 Voir le profil
               </button>
@@ -359,9 +359,9 @@ const isHovered = ref(false)
       <p>{{ props.quote.text }}</p>
     </div>
     <div class="mt-3 flex gap-4 text-sm text-gray-800">
+      <pamber-900">
       <p
-        class="p-1 bg-gray-300 rounded-xl px-2"
-        v-if="props.quote?.tags"
+        class="p-1 bg-amber-200 rounded-xl px-2 font-medium
         v-for="tags in props.quote.tags"
         v-show="tags && tags.trim()"
       >
@@ -370,7 +370,7 @@ const isHovered = ref(false)
     </div>
 
     <div v-if="props.quote.image" class="mt-4 overflow-hidden rounded-lg border border-gray-100">
-      <img
+      <imgamber-2
         :src="`${baseUrl}/uploads/${props.quote.image}`"
         alt="Image de la citation"
         class="w-full h-auto object-cover"
@@ -379,13 +379,13 @@ const isHovered = ref(false)
 
     <!-- Section Boutons -->
     <div class="mt-6 flex items-center justify-between border-t border-gray-200 pt-4">
-      <!-- Coeur (Like) -->
+      <!-- Coeur (Like) -->amber
       <div class="mt-6 flex items-center gap-6">
         <button
           @click="liked(props.quote._id, decoded.sub)"
           class="cursor-pointer group flex items-center gap-1 transition-colors"
           :class="isLiked(props.quote) ? 'text-red-600' : 'text-gray-500 hover:text-red-500'"
-        >
+        >amber-6
           <svg
             xmlns="http://www.w3.org"
             :fill="isLiked(props.quote) ? 'currentColor' : 'none'"

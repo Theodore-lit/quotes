@@ -1,12 +1,12 @@
 <template>
-  <div class="min-h-screen py-10 px-4">
+  <div class="min-h-screen py-10 px-4 bg-gradient-to-b from-amber-50 to-white">
     <div class="mx-auto max-w-3xl sm:px-6 lg:px-8">
       <!-- Header du Profil -->
       <div
-        class="relative bg-white shadow sm:rounded-lg py-8 p-6 flex flex-col sm:flex-row items-center sm:items-start gap-6 border-b-4 border-amber-600">
+        class="relative bg-white shadow-lg rounded-lg py-8 p-6 flex flex-col sm:flex-row items-center sm:items-start gap-6 border-b-4 border-amber-600">
 
         <div
-          class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-gray-500 text-white font-bold uppercase text-2xl overflow-hidden border-2 border-blue-100">
+          class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-amber-600 text-white font-bold uppercase text-2xl overflow-hidden border-2 border-amber-300">
           <img v-if="user?.avatar"
             :src="user.avatar.startsWith('http') ? user.avatar : `${baseUrl}/uploads/${user.avatar}`"
             class="h-full w-full object-cover" alt="Profile" />
@@ -16,12 +16,12 @@
         <div class="flex-1 text-center sm:text-left">
           <h1 class="text-2xl font-bold text-gray-900">{{ user?.username }}</h1>
           <div class="flex flex-wrap justify-center sm:justify-start gap-x-5 gap-y-1">
-            <p class="text-sm text-gray-500">{{ user?.email }}</p>
+            <p class="text-sm text-amber-700">{{ user?.email }}</p>
           </div>
-          <p v-if="user?.bio" class="text-sm text-gray-500 py-2">
+          <p v-if="user?.bio" class="text-sm text-gray-600 py-2">
             <span class="text-gray-800 font-medium">Bio: </span> {{ user?.bio }}
           </p>
-          <p v-if="user?.gender" class="text-sm text-gray-500">
+          <p v-if="user?.gender" class="text-sm text-gray-600">
            <span class="text-gray-800 font-medium">Sexe: </span> {{ user?.gender == 'M' ? 'Masculin' : 'Feminin' }}
             </p>
         </div>
@@ -35,7 +35,7 @@
           </button>
 
           <button @click="router.push({ name: 'settings' })"
-            class="flex-1 sm:flex-none cursor-pointer inline-flex items-center justify-center gap-2 rounded-lg bg-amber-100 px-4 py-2 text-amber-800 hover:bg-amber-200 transition-colors shadow-sm">
+            class="flex-1 sm:flex-none cursor-pointer inline-flex items-center justify-center gap-2 rounded-lg bg-amber-600 hover:bg-amber-700 px-4 py-2 text-white transition-colors shadow-md">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
               stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
               <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
@@ -60,7 +60,7 @@ import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import MyQuotesView from '@/views/MyQuotesView.vue'
 import OPTmodal from '@/ui/OPTmodal.vue'
-import { confirmLogout } from '@/utils/notifications'
+import { notifySuccess, notifyError, confirmDelete, notifyWarning, confirmLogout } from '@/utils/notifications.js'
 const baseUrl = import.meta.env.VITE_API_URL;
 
 
@@ -76,7 +76,7 @@ async function myQuotes() {
     const response = await userService.getUserById(route.params.id)
     user.value = response.data.data || response.data
   } catch (error) {
-    console.error('Problème au cours du chargement :', error)
+    notifyWarning('Aïe Aïe, problème au cours du chargement. Vérifiez votre connexion')
     user.value = []
   }
 }

@@ -127,9 +127,9 @@ onMounted(
 </script>
 
 <template>
-  <div class=" min-h-screen py-12 px-4">
+  <div class="min-h-screen py-12 px-4 bg-gradient-to-b from-amber-50 to-white">
     <div class="mx-auto max-w-3xl sm:px-6 lg:px-8">
-      <div class="bg-white shadow sm:rounded-lg p-6">
+      <div class="bg-white shadow-lg rounded-lg border border-amber-200 p-6">
         <h2 class="text-2xl font-bold text-gray-900 mb-6">Créer une citation</h2>
 
         <form @submit.prevent="send" class="space-y-6" enctype="multipart/form-data">
@@ -137,7 +137,7 @@ onMounted(
           <div>
             <label class="block text-sm font-medium text-gray-700">Votre citation </label>
             <textarea v-model="text" rows="4"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 border p-2"
+              class="mt-1 block w-full rounded-md border-amber-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 border p-2"
               placeholder="Écrivez quelque chose d'inspirant..." required></textarea>
           </div>
 
@@ -153,7 +153,7 @@ onMounted(
           </div>
 
           <div class="relative">
-            <img v-if="image" :src="curImage" class="w-full h-100 object-cover border border-gray-300" />
+            <img v-if="image" :src="curImage" class="w-full h-100 object-cover border border-amber-300 rounded-lg" />
           </div>
 
           <!-- Section Tags -->
@@ -162,17 +162,17 @@ onMounted(
                 class="text-gray-400 text-sm font-light">thèmes abordés</span></label>
             <div class="mt-1 flex gap-2">
               <input v-model="tagInput" @keydown.enter.prevent="addTag" type="text"
-                class="block flex-1 rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 border p-2"
+                class="block flex-1 rounded-md border-amber-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 border p-2"
                 placeholder="Appuyez sur Entrée pour ajouter" />
               <button @click.prevent="addTag" type="button"
-                class="cursor-pointer bg-gray-200 px-4 py-2 rounded-md hover:bg-gray-300">
+                class="cursor-pointer bg-amber-200 text-amber-700 hover:bg-amber-300 px-4 py-2 rounded-md transition-colors font-medium">
                 Ajouter
               </button>
             </div>
             <!-- Liste des tags -->
             <div class="mt-3 flex flex-wrap gap-2">
               <span v-for="(tag, index) in tags" :key="index"
-                class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-sm">
+                class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-sm font-medium">
                 #{{ tag }}
                 <button @click="removeTag(index)" type="button" class="font-bold hover:text-red-500">
                   ×
@@ -182,13 +182,13 @@ onMounted(
           </div>
 
           <!-- Boutons Actions -->
-          <div class="flex justify-end gap-4 pt-4 border-t">
+          <div class="flex justify-end gap-4 pt-4 border-t border-amber-200">
             <button @click="reset" type="button"
               class="cursor-pointer text-gray-600 hover:text-gray-800 text-sm font-medium">
               Annuler
             </button>
             <button type="submit"
-              class="cursor-pointer inline-flex justify-center rounded-md bg-amber-500 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-amber-500 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+              class="cursor-pointer inline-flex justify-center rounded-md bg-amber-600 hover:bg-amber-700 px-6 py-2 text-sm font-semibold text-white shadow-sm transition-colors focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-amber-600">
               {{ editStore.edit ? 'Modifier la citation' : 'Publier la citation' }}
             </button>
           </div>

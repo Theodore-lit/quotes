@@ -18,7 +18,6 @@ const decodeToken = () => {
     try {
       decoded.value = jwtDecode(loginStore.token)
     } catch (e) {
-      console.error('Token invalide')
       loginStore.logout()
     }
   }
@@ -34,21 +33,17 @@ watch(
 </script>
 
 <template>
-  <nav class="flex sticky opacity-30 bottom-0 max-w-200 p-4 justify-around bg-gray-800  rounded-t-sm h-15 items-center">
+  <nav class="flex sticky opacity-100 bottom-0 max-w-200 p-4 justify-around bg-gradient-to-r from-amber-600 to-amber-500 rounded-t-2xl h-15 items-center shadow-lg">
     <Home @click="router.push('/')" class="cursor-pointer px-3 py-2 text-sm font-medium rounded-md transition-colors"
-      :class="isActive('home') ? 'text-amber-600 bg-amber-50' : 'text-white hover:bg-gray-50 hover:text-gray-700'" :size="50" />
+      :class="isActive('home') ? 'text-amber-600 bg-white' : 'text-white hover:bg-amber-700'" :size="50" />
     <Search @click="router.push('/search')"
-      class="cursor-pointer px-3 py-2 text-sm font-medium rounded-md transition-colors" :class="isActive('search') ? 'text-amber-600 bg-amber-50' : 'text-white hover:bg-gray-50 hover:text-gray-700'
-        " :size="50" />
+      class="cursor-pointer px-3 py-2 text-sm font-medium rounded-md transition-colors" :class="isActive('search') ? 'text-amber-600 bg-white' : 'text-white hover:bg-amber-700'" :size="50" />
     <PlusSquare @click="router.push({ name: 'add-quote', params: { id: decoded?.sub } })"
-      class="cursor-pointer px-3 py-2 text-sm font-medium rounded-md transition-colors" :class="isActive('add-quote') ? 'text-amber-600 bg-amber-50' : 'text-white hover:bg-gray-50 hover:text-gray-700'
-        " :size="50" />
+      class="cursor-pointer px-3 py-2 text-sm font-medium rounded-md transition-colors" :class="isActive('add-quote') ? 'text-amber-600 bg-white' : 'text-white hover:bg-amber-700'" :size="50" />
     <Star @click="router.push({ name: 'bookmark', params: { id: decoded?.sub } })"
-      class="cursor-pointer px-3 py-2 text-sm font-medium rounded-md transition-colors" :class="isActive('bookmark') ? 'text-amber-600 bg-amber-50' : 'text-white hover:bg-gray-50 hover:text-gray-700'
-        " :size="50" />
+      class="cursor-pointer px-3 py-2 text-sm font-medium rounded-md transition-colors" :class="isActive('bookmark') ? 'text-amber-600 bg-white' : 'text-white hover:bg-amber-700'" :size="50" />
     <UserCircle @click="router.push({ name: 'profil', params: { id: decoded?.sub } })"
-      class="cursor-pointer px-3 py-2 text-sm font-medium rounded-md transition-colors" :class="isActive('profil') ? 'text-amber-600 bg-amber-50' : 'text-white hover:bg-gray-50 hover:text-gray-700'
-        " :size="50" />
+      class="cursor-pointer px-3 py-2 text-sm font-medium rounded-md transition-colors" :class="isActive('profil') ? 'text-amber-600 bg-white' : 'text-white hover:bg-amber-700'" :size="50" />
   </nav>
 </template>
 

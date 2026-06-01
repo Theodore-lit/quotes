@@ -35,6 +35,5 @@ io.on("connection", async (socket) => {
     const allLikes = await listLikes();
     socket.emit("initial_likes", allLikes);
   } catch (err) {
-    console.error("Erreur chargement initial socket:", err);
   }
 });

@@ -5,16 +5,16 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="bg-gray-100">
+  <div class="bg-gradient-to-b from-amber-50 to-white min-h-screen">
     <div class="mx-auto max-w-7xl py-12 sm:px-6 lg:px-8">
       <div class="mx-auto max-w-3xl">
-        <div class="bg-white shadow sm:rounded-lg">
+        <div class="bg-white shadow-lg rounded-lg border border-amber-200">
           <div class="px-4 py-5 sm:p-6">
             <h3 class="text-lg font-medium leading-6 text-gray-900">
               {{ props.quote.author.username }}
             </h3>
             <div class="mt-2 max-w-xl text-sm text-gray-500">
-              <p class="font-medium text-indigo-600">
+              <p class="font-medium text-amber-600">
                 {{ props.quote.createdAt }}
               </p>
               <div class="mt-3 text-sm text-gray-700">
@@ -23,10 +23,10 @@ const props = defineProps({
             </div>
 
             <!-- Section Boutons -->
-            <div class="mt-6 flex items-center gap-6 border-t border-gray-100 pt-4">
+            <div class="mt-6 flex items-center gap-6 border-t border-amber-200 pt-4">
               <!-- Coeur (Like) -->
               <button
-                class="group flex items-center text-gray-500 hover:text-red-500 transition-colors"
+                class="group flex items-center text-amber-600 hover:text-red-500 transition-colors"
               >
                 <svg
                   xmlns="http://www.w3.org"
@@ -47,7 +47,7 @@ const props = defineProps({
 
               <!-- Commentaire -->
               <button
-                class="group flex items-center text-gray-500 hover:text-blue-500 transition-colors"
+                class="group flex items-center text-amber-600 hover:text-blue-500 transition-colors"
               >
                 <svg
                   xmlns="http://www.w3.org"
@@ -68,7 +68,7 @@ const props = defineProps({
 
               <!-- Favoris (Bookmark) -->
               <button
-                class="group flex items-center text-gray-500 hover:text-yellow-500 transition-colors"
+                class="group flex items-center text-amber-600 hover:text-amber-700 transition-colors"
               >
                 <svg
                   xmlns="http://www.w3.org"

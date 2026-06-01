@@ -160,15 +160,15 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class=" min-h-screen py-12 px-4">
+  <div class="min-h-screen py-12 px-4 bg-gradient-to-b from-amber-50 to-white">
     <div class="relative mx-auto max-w-3xl sm:px-6 lg:px-8">
       <!-- Carte de la Citation (Style identique) -->
-      <div v-if="quote" class="bg-white shadow sm:rounded-lg overflow-hidden">
+      <div v-if="quote" class="bg-gradient-to-br from-amber-50 to-amber-100 shadow-lg rounded-lg border border-amber-200 overflow-hidden">
         <Quote :quote="quote" @userAction="getQuoteDetails" />
       </div>
       <!-- Section Commentaires -->
-      <div class=" my-10 px-4 py-6 sm:px-6">
-        <h4 class="text-sm font-semibold mb-4">Commentaires</h4>
+      <div class="my-10 px-4 py-6 sm:px-6">
+        <h4 class="text-sm font-semibold mb-4 text-amber-900">Commentaires</h4>
         <!-- Liste des commentaires existants -->
 
         <ul v-if="comments?.length > 0" class="mt-8 space-y-6">
@@ -182,16 +182,16 @@ onMounted(() => {
                 {{ comment.user?.username?.substring(0, 1) }}
               </span>
             </div>
-            <div class="flex-1 bg-white p-3 rounded-lg shadow-sm border border-gray-100">
+            <div class="flex-1 bg-gradient-to-br from-amber-50 to-white p-3 rounded-lg shadow-sm border border-amber-200">
               <div class="flex items-center justify-between w-full">
                 <div class="flex items-center gap-2">
                   <h5 class="text-sm font-bold text-gray-900">{{ comment.user?.username }}</h5>
-                  <span class="text-xs text-gray-500">{{ timeAgo(comment.createdAt) }}</span>
+                  <span class="text-xs text-amber-600">{{ timeAgo(comment.createdAt) }}</span>
                 </div>
 
                 <div v-if="decoded?.sub == comment.user?._id"
                   class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button @click="editing(comment._id)" class="cursor-pointer p-1 text-blue-600 ">
+                  <button @click="editing(comment._id)" class="cursor-pointer p-1 text-amber-600 hover:text-amber-700 transition-colors">
                     <svg xmlns="http://www.w3.org" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                       stroke="currentColor" class="w-5 h-5">
                       <path stroke-linecap="round" stroke-linejoin="round"

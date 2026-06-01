@@ -122,7 +122,6 @@ export async function createCode({ email, code }) {
       expiresAt: new Date(Date.now() + 10 * 60 * 1000),
     });
   } catch (error) {
-    console.error("Erreur lors de l'envoi de l'email via EmailJS:", error);
     throw new Error("Impossible d'envoyer le code de vérification");
   }
 }

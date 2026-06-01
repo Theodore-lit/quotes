@@ -5,6 +5,7 @@ import { useLoginStore } from '@/stores/login'
 import { useWebSocketStore } from '@/stores/webSocketStore' // 1. Importe le store
 import Quote from '@/components/Quote.vue'
 import { listQuotes } from '@/services/quotes'
+import { notifySuccess, notifyError, confirmDelete, notifyWarning } from '@/utils/notifications.js'
 
 const loginStore = useLoginStore()
 const socketStore = useWebSocketStore() // 2. Initialise le store
@@ -48,7 +49,7 @@ async function getQuotes() {
     // 5. On remplit le store avec les données de l'API
     socketStore.quotes = data
   } catch (error) {
-    console.error('Problème au cours du chargement :', error)
+    notifyWarning('Aïe Aïe, problème au cours du chargement. Vérifiez votre connexion')
   }
 }
 
@@ -80,7 +81,7 @@ onMounted(() => {
     Plus de {{ filteredQuotes.length }} pépites à lire
   </div>
 </div>
-      <div v-for="quote in filteredQuotes" :key="quote._id" class="bg-white shadow rounded-lg">
+      <div v-for="quote in filteredQuotes" :key="quote._id" class="bg-gradient-to-br from-amber-50 to-amber-100 shadow-lg rounded-lg border border-amber-200 hover:shadow-xl hover:shadow-amber-300 transition-all duration-300">
         <Quote :quote="quote" @userAction="getQuotes()" />
       </div>
   </div>

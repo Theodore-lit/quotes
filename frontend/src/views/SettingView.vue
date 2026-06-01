@@ -119,7 +119,6 @@ async function askModification(msg, type) {
     })
   } catch (error) {
     notifyWarning('Partientez un moment avant de faire une nouvelle demande')
-    console.error(error)
   }
 }
 
@@ -129,8 +128,8 @@ const handleSecurity = () => {
 </script>
 
 <template>
-  <div class="min-h-screen py-12 px-4">
-    <div class="max-w-4xl mx-auto p-6 bg-white">
+  <div class="min-h-screen py-12 px-4 bg-gradient-to-b from-amber-50 to-white">
+    <div class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg border border-amber-200">
       <!-- <button
         class="p-1 cursor-pointer text-xs text-amber-300 border rounded-lg border-yellow-200"
         @click="router.back()"
@@ -139,7 +138,7 @@ const handleSecurity = () => {
       </button> -->
       <h1 class="text-2xl font-bold text-gray-800 mb-6">Paramètres du compte</h1>
 
-      <div class="w-full mx-auto bg-white rounded-xl border-slate-200 overflow-hidden">
+      <div class="w-full mx-auto bg-white rounded-xl border-amber-200 overflow-hidden">
         <div class="flex flex-col gap-6">
           <!-- <div class="px-4 py-3 bg-slate-50 border-b border-slate-200">
       <h3 class="text-sm font-semibold text-slate-700 uppercase tracking-wider">Paramètres du compte</h3>
@@ -148,28 +147,28 @@ const handleSecurity = () => {
           <nav v-if="!toUpdate && !confirm" class="flex flex-col">
             <p
               @click="toUpdate = 'profil'"
-              class="px-4 py-3 text-slate-600 hover:bg-indigo-50 hover:text-indigo-700 cursor-pointer transition-colors duration-200 flex items-center border-b border-slate-100 last:border-0"
+              class="px-4 py-3 text-amber-700 hover:bg-amber-50 hover:text-amber-800 cursor-pointer transition-colors duration-200 flex items-center border-b border-amber-100 last:border-0 font-medium"
             >
               <span class="font-medium">Modifier le Profil</span>
             </p>
 
             <p
               @click="toUpdate = 'bio'"
-              class="px-4 py-3 text-slate-600 hover:bg-indigo-50 hover:text-indigo-700 cursor-pointer transition-colors duration-200 flex items-center border-b border-slate-100 last:border-0"
+              class="px-4 py-3 text-amber-700 hover:bg-amber-50 hover:text-amber-800 cursor-pointer transition-colors duration-200 flex items-center border-b border-amber-100 last:border-0 font-medium"
             >
               <span class="font-medium">Ajouter une Bio</span>
             </p>
 
             <p
               @click="askModification('Voulez-vous modifier votre username ?', 'username')"
-              class="px-4 py-3 text-slate-600 hover:bg-indigo-50 hover:text-indigo-700 cursor-pointer transition-colors duration-200 flex items-center border-b border-slate-100 last:border-0"
+              class="px-4 py-3 text-amber-700 hover:bg-amber-50 hover:text-amber-800 cursor-pointer transition-colors duration-200 flex items-center border-b border-amber-100 last:border-0 font-medium"
             >
               <span class="font-medium">Changer de nom</span>
             </p>
 
             <p
               @click="askModification('Voulez-vous vraiment modifier votre mot de passe ?', 'pwd')"
-              class="px-4 py-3 text-red-600 hover:bg-red-50 cursor-pointer transition-colors duration-200 flex items-center"
+              class="px-4 py-3 text-red-600 hover:bg-red-50 cursor-pointer transition-colors duration-200 flex items-center font-medium"
             >
               <span class="font-medium">Modifier le mot de passe</span>
             </p>
@@ -182,18 +181,18 @@ const handleSecurity = () => {
       <div class="flex flex-col gap-6 py-4">
         <div
           v-if="toUpdate == 'profil'"
-          class="flex relative flex-col gap-6 p-4 bg-slate-50 rounded-lg"
+          class="flex relative flex-col gap-6 p-4 bg-gradient-to-br from-amber-50 to-white rounded-lg border border-amber-200"
         >
           <div class="flex items-center gap-6">
             <div class="relative">
               <img
                 v-if="user.avatar"
                 :src="curImage"
-                class="w-20 h-20 rounded-full object-cover border-2 border-blue-500"
+                class="w-20 h-20 rounded-full object-cover border-2 border-amber-600"
               />
               <div
                 v-else
-                class="w-20 h-20 rounded-full bg-amber-50 flex items-center justify-center text-white text-2xl font-bold"
+                class="w-20 h-20 rounded-full bg-amber-200 flex items-center justify-center text-amber-700 text-2xl font-bold"
               ></div>
             </div>
             <div>
@@ -214,19 +213,20 @@ const handleSecurity = () => {
             label="Enregistrer les modifications"
             :loading="loading"
             @click="updateProfile"
-            class="w-fit bg-green-500"
+            class="w-fit"
+            style="background-color: #f59e0b; color: white;"
           />
 
           <button
-            class="absolute top-2 text-gray-400 rounded-lg p-1 right-5 cursor-pointer border border-gray-600"
+            class="absolute top-2 text-amber-600 hover:text-amber-700 rounded-lg p-1 right-5 cursor-pointer border border-amber-300 transition-colors"
             @click="reset()"
           >
             Annuler
           </button>
         </div>
 
-        <div v-if="editUser" class="flex flex-col gap-2 relative">
-          <label for="username" class="font-semibold text-sm">Nom d'utilisateur</label>
+        <div v-if="editUser" class="flex flex-col gap-2 relative bg-gradient-to-br from-amber-50 to-white rounded-lg p-4 border border-amber-200">
+          <label for="username" class="font-semibold text-sm text-amber-900">Nom d'utilisateur</label>
           <InputText
             id="username"
             v-model="user.username"
@@ -238,26 +238,28 @@ const handleSecurity = () => {
             :loading="loading"
             @click="updateProfile"
             class="w-fit"
+            style="background-color: #f59e0b; color: white;"
           />
           <button
-            class="absolute bottom-0 text-gray-400 rounded-lg p-1 right-5 cursor-pointer border border-gray-600"
+            class="absolute bottom-0 text-amber-600 hover:text-amber-700 rounded-lg p-1 right-5 cursor-pointer border border-amber-300 transition-colors"
             @click="reset()"
           >
             Annuler
           </button>
         </div>
 
-        <div v-if="toUpdate == 'bio'" class="flex flex-col gap-2 opacity-60 relative">
-          <label for="bio" class="font-semibold text-sm">Bio</label>
+        <div v-if="toUpdate == 'bio'" class="flex flex-col gap-2 relative bg-gradient-to-br from-amber-50 to-white rounded-lg p-4 border border-amber-200">
+          <label for="bio" class="font-semibold text-sm text-amber-900">Bio</label>
           <InputText id="bio" v-model="user.bio" class="w-full" />
           <Button
             label="Enregistrer les modifications"
             :loading="loading"
             @click="updateProfile"
             class="w-fit"
+            style="background-color: #f59e0b; color: white;"
           />
           <button
-            class="absolute bottom-0 text-gray-400 rounded-lg p-1 right-5 cursor-pointer border border-gray-600"
+            class="absolute bottom-0 text-amber-600 hover:text-amber-700 rounded-lg p-1 right-5 cursor-pointer border border-amber-300 transition-colors"
             @click="reset()"
           >
             Annuler

@@ -23,7 +23,7 @@ onMounted(() => {
       loginStore.login({ token })
       router.push('/home')
     } catch (error) {
-      console.error('Erreur lors du parsing des données Google:', error)
+      notifyWarning('Les données de votre compte google ne sont pas accessible.')
     }
   }
 })

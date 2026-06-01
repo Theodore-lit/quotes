@@ -11,7 +11,7 @@
         </div>
 
         <template v-else-if="quotes.length > 0">
-          <div v-for="quote in quotes" :key="quote._id" class="bg-white shadow sm:rounded-lg group">
+          <div v-for="quote in quotes" :key="quote._id" class="bg-gradient-to-br from-amber-50 to-amber-100 shadow-lg rounded-lg border border-amber-200 hover:shadow-xl hover:shadow-amber-300 transition-all duration-300">
             <Quote :quote="quote" @userAction="myQuotes()" />
           </div>
         </template>
@@ -19,12 +19,12 @@
         <!-- Cas vide -->
         <div
           v-else
-          class="text-center py-20 bg-white rounded-lg shadow border-2 border-dashed border-gray-200"
+          class="text-center py-20 bg-gradient-to-br from-amber-50 to-amber-100 rounded-lg shadow border-2 border-dashed border-amber-300"
         >
-          <p class="text-gray-500">Vous n'avez pas encore publié de citations.</p>
+          <p class="text-amber-900">Vous n'avez pas encore publié de citations.</p>
           <button
             @click="router.push({ name: 'add-quote' })"
-            class="mt-4 text-amber-300 font-bold hover:underline"
+            class="mt-4 text-amber-700 font-bold hover:text-amber-800 transition-colors"
           >
             Écrire ma première citation
           </button>
@@ -60,13 +60,14 @@ const loginStore = useLoginStore()
 const token = loginStore.token
 const decoded = token ? jwtDecode(token) : null
 const quotes = ref(null)
+import { notifySuccess, notifyError, confirmDelete, notifyWarning } from '@/utils/notifications.js'
 
 async function myQuotes() {
   try {
     const ID = route.params.id
     quotes.value = await userQuotes(ID)
   } catch (error) {
-    console.error('Problème au cours du chargement :', error)
+    notifyWarning('Aïe Aïe, problème au cours du chargement. Vérifiez votre connexion')
     quotes.value = []
   }
 }

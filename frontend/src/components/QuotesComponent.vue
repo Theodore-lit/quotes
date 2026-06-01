@@ -109,6 +109,7 @@ import { jwtDecode } from 'jwt-decode'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { getQuoteById, deleteQuote as deleteQuoteRequest, userQuotes as fetchUserQuotes } from '@/services/quotes'
+import { notifySuccess, notifyError, confirmDelete, notifyWarning } from '@/utils/notifications.js'
 const baseUrl = import.meta.env.VITE_API_URL;
 
 const router = useRouter()
@@ -122,7 +123,7 @@ async function myQuotes() {
   try {
     quotes.value = await fetchUserQuotes(decoded.sub)
   } catch (error) {
-    console.error('Problème au cours du chargement :', error)
+    notifyWarning('Aïe Aïe, problème au cours du chargement. Vérifiez votre connexion')
     quotes.value = []
   }
 }

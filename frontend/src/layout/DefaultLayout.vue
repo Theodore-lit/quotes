@@ -5,6 +5,7 @@ import { useLoginStore } from '@/stores/login'
 import { jwtDecode } from 'jwt-decode'
 import { ref, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { notifySuccess, notifyError, confirmDelete, notifyWarning } from '@/utils/notifications.js'
 
 const loginStore = useLoginStore()
 const route = useRoute()
@@ -17,7 +18,7 @@ const decodeToken = () => {
     try {
       decoded.value = jwtDecode(loginStore.token)
     } catch (e) {
-      console.error('Token invalide')
+      notifyWarning('Connectez-vous pour continuez')
       loginStore.logout()
     }
   }
@@ -34,11 +35,11 @@ watch(
 </script>
 
 <template>
-  <div class="bg-white">
+  <div class="bg-gradient-to-b from-white to-amber-50">
     <div class="mx-auto max-w-3xl sm:px-6 lg:px-8">
       <NavBarComponent v-if="decoded && !isAuthPage" />
       <router-view></router-view>
-      <div class="text-gray-400 text-sm italic text-center pb-10">
+      <div class="text-amber-700 text-sm italic text-center pb-10 pt-4">
         ©Tout Droit Réservé Mise en ligne par Li't-dev
       </div>
       <FooterNavComponent v-if="decoded && !isAuthPage" />

@@ -79,7 +79,6 @@ async function toValid(codeFinal) {
       title: 'Oops...',
       text: 'Code incorret!',
     })
-    console.error('Problème au cours de vérification du code :', error)
   }
 }
 </script>

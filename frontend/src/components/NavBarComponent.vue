@@ -21,7 +21,6 @@ const decodeToken = () => {
       decoded.value = jwtDecode(loginStore.token)
 
     } catch (e) {
-      console.error('Token invalide')
       loginStore.logout()
     }
   }
@@ -55,7 +54,7 @@ watch(
 </script>
 
 <template>
-  <nav class="bg-white border-b border-gray-100 px-4 sticky top-0 z-50">
+  <nav class="bg-white border-b border-amber-200 px-4 sticky top-0 z-50 shadow-sm">
     <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       <div class="flex h-16 justify-between items-center">
         <!-- Logo -->
