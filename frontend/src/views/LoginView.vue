@@ -100,7 +100,7 @@ async function connect() {
         </div>
 
         <!-- Google Login -->
-        <a :href="`${url}auth/google`"
+        <a :href="`${url}/auth/google`"
           class="w-full cursor-pointer flex items-center justify-center gap-2 border border-gray-300 py-2 rounded-lg hover:bg-gray-100 transition">
 
           <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5" alt="Google Logo">

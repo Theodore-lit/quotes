@@ -359,9 +359,8 @@ const isHovered = ref(false)
       <p>{{ props.quote.text }}</p>
     </div>
     <div class="mt-3 flex gap-4 text-sm text-gray-800">
-      <pamber-900">
       <p
-        class="p-1 bg-amber-200 rounded-xl px-2 font-medium
+        class="p-1 bg-amber-200 rounded-xl px-2 font-medium"
         v-for="tags in props.quote.tags"
         v-show="tags && tags.trim()"
       >

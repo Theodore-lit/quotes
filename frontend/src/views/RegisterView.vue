@@ -2,7 +2,7 @@
 import { reactive, ref } from 'vue'
 import { ShieldCheck, UserIcon} from 'lucide-vue-next'
 import Stepper from 'primevue/stepper'
-import StepList from 'primevue/steplist'
+import StepList from 'primevue/steppist'
 import Step from 'primevue/step'
 import StepPanels from 'primevue/steppanels'
 import StepPanel from 'primevue/steppanel'
