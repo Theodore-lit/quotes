@@ -7,6 +7,7 @@ import { formatDistanceToNow } from 'date-fns' // Décommente l'import
 import { fr } from 'date-fns/locale'
 import { useLoginStore } from '@/stores/login'
 import { useWebSocketStore } from '@/stores/webSocketStore' 
+const baseUrl = import.meta.env.VITE_API_URL;
 const route = useRoute() // Initialise la route actuelle
 const router = useRouter() // Ajoute router
 const loginStore = useLoginStore()
@@ -175,7 +176,7 @@ onMounted(() => {
             <div
               class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-600 text-white font-bold uppercase text-2xl overflow-hidden">
               <img v-if="comment.user?.avatar"
-                :src="comment.user?.avatar || `http://localhost:4000/uploads/${comment.user?.avatar}`"
+                :src="comment.user?.avatar || `${baseUrl}/uploads/${comment.user?.avatar}`"
                 class="h-full w-full object-cover" alt="Profile" />
               <span v-else>
                 {{ comment.user?.username?.substring(0, 1) }}

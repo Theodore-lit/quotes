@@ -11,6 +11,7 @@ import { notifySuccess, notifyError, confirmDelete, notifyWarning } from '@/util
 import { getQuoteById, deleteQuote as deleteQuoteRequest } from '@/services/quotes'
 import { getLikesForQuote, likeQuote, unlikeLike } from '@/services/likes'
 import { getBookmarksForQuote, createBookmark, deleteBookmark } from '@/services/bookmarks'
+const baseUrl = import.meta.env.VITE_API_URL;
 
 const router = useRouter()
 const showMenu = ref(false) // Pour contrôler l'affichage du menu
@@ -306,7 +307,7 @@ const isHovered = ref(false)
             v-if="props.quote.author?.avatar"
             :src="
               props.quote.author.avatar ||
-              `http://localhost:4000/uploads/${props.quote.author.avatar}`
+              `${baseUrl}/uploads/${props.quote.author.avatar}`
             "
             alt="avatar"
             class="h-full w-full object-cover"
@@ -370,7 +371,7 @@ const isHovered = ref(false)
 
     <div v-if="props.quote.image" class="mt-4 overflow-hidden rounded-lg border border-gray-100">
       <img
-        :src="`http://localhost:4000/uploads/${props.quote.image}`"
+        :src="`${baseUrl}/uploads/${props.quote.image}`"
         alt="Image de la citation"
         class="w-full h-auto object-cover"
       />

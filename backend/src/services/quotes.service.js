@@ -104,7 +104,6 @@ export async function listBookmark(id) {
 
     return results;
   } catch (error) {
-    console.log(error);
   }
 }
 
@@ -117,6 +116,5 @@ export async function quotesUser(id) {
       .populate("bookmarksCount");
     return quotes;
   } catch (error) {
-    console.log(error);
   }
 }

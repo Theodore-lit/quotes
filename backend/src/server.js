@@ -22,7 +22,6 @@ app.set("socketio", io);
 await connectDb();
 
 server.listen(PORT, () => {
-  // console.log(`Serveur et WebSockets demarres sur http://localhost:${PORT}`);
 });
 
 io.on("connection", async (socket) => {

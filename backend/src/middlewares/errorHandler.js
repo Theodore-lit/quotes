@@ -1,5 +1,4 @@
 export default function errorHandler(err, req, res, next) {
-  console.log(err);
 
   // Erreurs Mongoose fréquentes (simple)
   if (err.name === "ValidationError") {

@@ -69,7 +69,7 @@
                 class="mt-4 overflow-hidden rounded-lg border border-gray-200"
               >
                 <img
-                  :src="`http://localhost:4000/uploads/${quote.image}`"
+                  :src="`${baseUrl}/uploads/${quote.image}`"
                   alt="Image de la citation"
                   class="w-full h-auto object-cover"
                 />
@@ -109,6 +109,7 @@ import { jwtDecode } from 'jwt-decode'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { getQuoteById, deleteQuote as deleteQuoteRequest, userQuotes as fetchUserQuotes } from '@/services/quotes'
+const baseUrl = import.meta.env.VITE_API_URL;
 
 const router = useRouter()
 const loginStore = useLoginStore()
@@ -137,7 +138,6 @@ async function editQuote(quoteId) {
     editStore.toEdit(quote)
     router.push('/addquote')
   } catch (error) {
-    console.log(error)
   }
 }
 

@@ -55,7 +55,6 @@ export async function registerUser({ username, email, password, role, gender, bi
 }
 
 export async function loginUser({ email, password }) {
-  console.log({ email, password })
   if (typeof email !== "string" || typeof password !== "string") {
     const err = new Error("email and password are required");
     err.statusCode = 400;

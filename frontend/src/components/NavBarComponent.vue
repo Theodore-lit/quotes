@@ -6,6 +6,7 @@ import { onMounted, ref, computed } from 'vue'
 import { watch } from 'vue'
 import { LogOut } from 'lucide-vue-next';
 import { confirmLogout } from '@/utils/notifications'
+const baseUrl = import.meta.env.VITE_API_URL;
 
 const loginStore = useLoginStore()
 const router = useRouter()
@@ -88,7 +89,7 @@ watch(
                 <div
                   class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gray-400 text-white font-extralight uppercase text-xs  overflow-hidden">
                   
-                  <img v-if="decoded?.avatar" :src="decoded.avatar.startsWith('http') ? decoded.avatar : `http://localhost:4000/uploads/${decoded.avatar}`"
+                  <img v-if="decoded?.avatar" :src="decoded.avatar.startsWith('http') ? decoded.avatar : `${baseUrl}/uploads/${decoded.avatar}`"
                     class="h-full w-full object-cover" />
                   <span v-else>
                     {{ decoded?.username?.substring(0, 2) }}

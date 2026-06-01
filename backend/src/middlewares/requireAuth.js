@@ -31,7 +31,6 @@ export function requireAuth(req, res, next) {
 
     return next();
   } catch (err) {
-    console.log(err)
     // jsonwebtoken lève : TokenExpiredError, JsonWebTokenError, NotBeforeError
     return res
       .status(401)

@@ -10,7 +10,7 @@ import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
 import Button from 'primevue/button'
 import FileUpload from 'primevue/fileupload'
-
+const url = import.meta.env.VITE_API_URL;
 import { register as registerUser } from '@/services/auth'
 
 const activeStep = ref(0); // On commence à l'étape 0 (Profil)
@@ -151,7 +151,7 @@ const handleFileUpload = (event) => {
             </div>
           </div>
         </StepPanel>
-        <a href="http://localhost:4000/api/auth/google"
+        <a :href="`${url}/auth/google`"
           class="w-full mt-4 border border-gray-300 py-2 rounded-lg flex items-center justify-center hover:bg-gray-100 transition">
           <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" class="w-5 h-5 mr-2" />
           Sign-up with Google

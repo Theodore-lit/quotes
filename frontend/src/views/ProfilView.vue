@@ -8,7 +8,7 @@
         <div
           class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-gray-500 text-white font-bold uppercase text-2xl overflow-hidden border-2 border-blue-100">
           <img v-if="user?.avatar"
-            :src="user.avatar.startsWith('http') ? user.avatar : `http://localhost:4000/uploads/${user.avatar}`"
+            :src="user.avatar.startsWith('http') ? user.avatar : `${baseUrl}/uploads/${user.avatar}`"
             class="h-full w-full object-cover" alt="Profile" />
           <span v-else>{{ user?.username?.substring(0, 1) }}</span>
         </div>
@@ -61,6 +61,8 @@ import { useRoute, useRouter } from 'vue-router'
 import MyQuotesView from '@/views/MyQuotesView.vue'
 import OPTmodal from '@/ui/OPTmodal.vue'
 import { confirmLogout } from '@/utils/notifications'
+const baseUrl = import.meta.env.VITE_API_URL;
+
 
 const router = useRouter()
 const route = useRoute()
