@@ -50,6 +50,7 @@ export function googleAuthCallback(req, res) {
     const { user, token } = req.user;
     // Redirige vers le frontend avec le token en query param
     const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    console.log(frontendUrl)
     return res.redirect(
       `${frontendUrl}/login?token=${encodeURIComponent(token)}`,
     );
